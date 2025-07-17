@@ -1,6 +1,6 @@
 {
   "name": "@contaazul/n8n-nodes-contaazul",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Node para integração com a API da Conta Azul no n8n",
   "keywords": [
     "n8n-community-node-package",
@@ -55,7 +55,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:package": "node scripts/test-package.js",
-    "release": "release-it --config release-it.js",
+    "release": "release-it --config release-it.config.js",
     "release:preview": "yarn release --ci --dry-run"
   },
   "files": [

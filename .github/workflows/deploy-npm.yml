@@ -37,7 +37,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
 
       # Cache dependencies
@@ -52,7 +52,7 @@ jobs:
       # Install project dependencies
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn
+        run: yarn install --immutable
 
       # Build the project
       - name: Build
@@ -63,6 +63,11 @@ jobs:
         run: |
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+
+      - name: Changes
+        run: |
+          git status
+          git diff
 
       # Release and publish version
       - name: Release version
