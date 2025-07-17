@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-contaazul",
+  "name": "@contaazul/n8n-nodes-contaazul",
   "version": "0.1.0",
   "description": "Node para integração com a API da Conta Azul no n8n",
   "keywords": [
@@ -13,7 +13,8 @@
   "license": "MIT",
   "homepage": "https://github.com/ContaAzul/n8n-nodes-contaazul",
   "publishConfig": {
-    "registry": "http://npm.prod.contaazul.local"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "author": {
     "name": "Conta Azul",
@@ -23,20 +24,39 @@
     "type": "git",
     "url": "https://github.com/ContaAzul/n8n-nodes-contaazul.git"
   },
-  "engines": {
-    "node": ">=20.15"
+  "packageManager": "yarn@4.9.2",
+  "selfEngines": {
+    "node": ">=22.x",
+    "yarn": ">=4"
   },
   "main": "index.js",
+  "simple-git-hooks": {
+    "commit-msg": "yarn commitlint --edit $1",
+    "pre-commit": "yarn lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "echo 0 || yarn lint:fix"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
+  },
   "scripts": {
+    "prepack": "ca-pinst --disable",
+    "postpack": "ca-pinst --enable",
+    "preinstall": "yarn dlx only-allow yarn",
+    "postinstall": " yarn simple-git-hooks",
     "build": "npx rimraf dist && tsc && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
-    "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json",
+    "lint:fix": "eslint nodes credentials package.json --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:package": "node scripts/test-package.js"
+    "test:package": "node scripts/test-package.js",
+    "release": "release-it --config release-it.js",
+    "release:preview": "yarn release --ci --dry-run"
   },
   "files": [
     "dist"
@@ -51,14 +71,25 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/format": "^19.8.1",
     "@jest/globals": "^29.7.0",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@types/jest": "^29.5.8",
     "@typescript-eslint/parser": "~8.32.0",
+    "contaazul-pinst": "^1.1.8",
+    "conventional-changelog": "^7.1.1",
+    "conventional-changelog-conventionalcommits": "^9.1.0",
     "eslint": "^8.57.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
     "gulp": "^5.0.0",
     "jest": "^29.7.0",
-    "prettier": "^3.5.3",
+    "lint-staged": "^16.1.2",
+    "n8n-workflow": "*",
+    "prettier": "^3.6.2",
+    "release-it": "^19.0.4",
+    "simple-git-hooks": "^2.13.0",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.2"
   },
