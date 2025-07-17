@@ -1,0 +1,50 @@
+# Arquivos de desenvolvimento
+tests/
+node_modules/
+.github/
+.vscode/
+.idea/
+
+# Arquivos de configuração local
+.env
+.env.local
+.env.*.local
+
+# Arquivos de build temporários
+*.tsbuildinfo
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de configuração de desenvolvimento
+.eslintrc.js
+.eslintrc.prepublish.js
+.prettierrc.js
+.editorconfig
+jest.config.js
+gulpfile.js
+
+# Arquivos de código fonte (já compilados em dist/)
+src/
+*.ts
+!*.d.ts
+
+# Arquivos de documentação de desenvolvimento
+README_TEMPLATE.md
+CODE_OF_CONDUCT.md
+PUBLISHING.md
+
+# Arquivos de controle de versão
+.git/
+.gitignore
+
+# Arquivos de lock (não necessários no pacote)
+package-lock.json
+yarn.lock 
