@@ -1,4 +1,4 @@
 export function toYYYYMMDD(dateString: string): string {
-	if (!dateString) return '';
-	return dateString.split('T')[0];
+  if (!dateString) return '';
+  return dateString.split('T')[0];
 }
