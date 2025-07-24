@@ -56,7 +56,8 @@
     "test:watch": "jest --watch",
     "test:package": "node scripts/test-package.js",
     "release": "release-it --config release-it.config.js",
-    "release:preview": "yarn release --ci --dry-run"
+    "release:preview": "yarn release --ci --dry-run",
+    "cov": "jest --coverage"
   },
   "files": [
     "dist"
