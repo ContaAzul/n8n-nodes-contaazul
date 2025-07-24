@@ -3,6 +3,7 @@ import { ICredentialType, INodeProperties } from 'n8n-workflow';
 export class ContaAzulOAuth2Api implements ICredentialType {
   name = 'contaAzulOAuth2Api';
   displayName = 'Conta Azul OAuth2 API';
+	documentationUrl = 'https://developers.contaazul.com/auth';
   extends = ['oAuth2Api'];
   properties: INodeProperties[] = [
     {
@@ -15,6 +16,7 @@ export class ContaAzulOAuth2Api implements ICredentialType {
       displayName: 'Client Secret',
       name: 'clientSecret',
       type: 'string',
+						typeOptions: { password: true },
       default: '',
     },
     {

@@ -1,6 +1,6 @@
 {
   "name": "@contaazul/n8n-nodes-contaazul",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Node para integração com a API da Conta Azul no n8n",
   "keywords": [
     "n8n-community-node-package",
@@ -50,13 +50,14 @@
     "build": "npx rimraf dist && tsc && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
-    "lint": "eslint nodes credentials package.json",
-    "lint:fix": "eslint nodes credentials package.json --fix",
+    "lint": "eslint nodes credentials",
+    "lint:fix": "eslint nodes credentials --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:package": "node scripts/test-package.js",
     "release": "release-it --config release-it.config.js",
-    "release:preview": "yarn release --ci --dry-run"
+    "release:preview": "yarn release --ci --dry-run",
+    "cov": "jest --coverage"
   },
   "files": [
     "dist"
@@ -95,5 +96,11 @@
   },
   "peerDependencies": {
     "n8n-workflow": "*"
+  },
+  "resolutions": {
+    "form-data": "^4.0.4"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
   }
 }
