@@ -54,7 +54,6 @@ jspm_packages/
 # npm
 .npm
 .npmrc
-package-lock.json
 
 # dotenv environment variables file
 .env

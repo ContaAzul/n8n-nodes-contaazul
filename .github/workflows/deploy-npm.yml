@@ -47,16 +47,16 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: yarn-${{ hashFiles('**/package.json', 'yarn.lock') }}
+          key: npm-${{ hashFiles('**/package.json', 'package-lock.json') }}
 
       # Install project dependencies
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --immutable
+        run: npm ci
 
       # Build the project
       - name: Build
-        run: yarn build
+        run: npm run build
 
       # Authenticate to NPM
       - name: Authenticate with Registry
@@ -71,4 +71,4 @@ jobs:
 
       # Release and publish version
       - name: Release version
-        run: NPM_TOKEN="${{ secrets.NPM_TOKEN }}" yarn release --ci --npm.skipChecks
+        run: NPM_TOKEN="${{ secrets.NPM_TOKEN }}" npm run release --ci --npm.skipChecks
