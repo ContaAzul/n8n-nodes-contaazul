@@ -1,6 +1,6 @@
 {
   "name": "@contaazul/n8n-nodes-contaazul",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "Node para integração com a API da Conta Azul no n8n",
   "keywords": [
     "n8n-community-node-package",
@@ -24,29 +24,24 @@
     "type": "git",
     "url": "https://github.com/ContaAzul/n8n-nodes-contaazul.git"
   },
-  "packageManager": "yarn@4.9.2",
-  "selfEngines": {
-    "node": ">=22.x",
-    "yarn": ">=4"
+  "engines": {
+    "node": ">=22.x"
   },
   "main": "index.js",
   "simple-git-hooks": {
-    "commit-msg": "yarn commitlint --edit $1",
-    "pre-commit": "yarn lint-staged"
+    "commit-msg": "npx commitlint --edit $1",
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
     "*.js": [
-      "echo 0 || yarn lint:fix"
+      "echo 0 || npm run lint:fix"
     ],
     "*.{json,md,yml}": [
       "prettier --write"
     ]
   },
   "scripts": {
-    "prepack": "ca-pinst --disable",
-    "postpack": "ca-pinst --enable",
-    "preinstall": "yarn dlx only-allow yarn",
-    "postinstall": " yarn simple-git-hooks",
+    "postinstall": "npx simple-git-hooks",
     "build": "npx rimraf dist && tsc && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
@@ -56,7 +51,7 @@
     "test:watch": "jest --watch",
     "test:package": "node scripts/test-package.js",
     "release": "release-it --config release-it.config.js",
-    "release:preview": "yarn release --ci --dry-run",
+    "release:preview": "npm run release --ci --dry-run",
     "cov": "jest --coverage"
   },
   "files": [
@@ -79,7 +74,6 @@
     "@release-it/conventional-changelog": "^10.0.1",
     "@types/jest": "^29.5.8",
     "@typescript-eslint/parser": "~8.32.0",
-    "contaazul-pinst": "^1.1.8",
     "conventional-changelog": "^7.1.1",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "eslint": "^8.57.0",

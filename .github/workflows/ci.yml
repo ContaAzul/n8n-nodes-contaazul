@@ -15,10 +15,10 @@ jobs:
           node-version: '22.x'
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: npm ci
 
       - name: Run lint
-        run: yarn lint
+        run: npm run lint
 
       - name: Run test and check coverage
-        run: yarn run cov
+        run: npm run cov
