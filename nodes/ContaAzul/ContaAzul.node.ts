@@ -108,7 +108,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'Busca Textual (Venda)',
+        displayName: 'Text Search (Sale)',
         name: 'busca_textual_venda',
         type: 'string',
         displayOptions: {
@@ -117,10 +117,10 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Busca textual por nome do cliente, número da venda ou email do cliente',
+        description: 'Text search by customer name, sale number or customer email',
       },
       {
-        displayName: 'Página (Venda)',
+        displayName: 'Page (Sale)',
         name: 'pagina_venda',
         type: 'number',
         displayOptions: {
@@ -132,7 +132,7 @@ export class ContaAzul implements INodeType {
         description: 'Número da página',
       },
       {
-        displayName: 'Tamanho Da Página (Venda)',
+        displayName: 'Page Size (Sale)',
         name: 'tamanho_pagina_venda',
         type: 'number',
         displayOptions: {
@@ -144,7 +144,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'ID Da Venda',
+        displayName: 'Sale ID',
         name: 'saleId',
         type: 'string',
         required: true,
@@ -154,10 +154,10 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'ID (UUID) da venda para buscar',
+        description: 'Sale ID (UUID) to search for',
       },
       {
-        displayName: 'Termo De Busca',
+        displayName: 'Search Term',
         name: 'termo_busca',
         type: 'string',
         displayOptions: {
@@ -166,7 +166,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Busca por documento, nome do cliente ou nome da empresa',
+        description: 'Search by document, customer name or company name',
       },
       {
         displayName: 'Página (Pessoa)',
