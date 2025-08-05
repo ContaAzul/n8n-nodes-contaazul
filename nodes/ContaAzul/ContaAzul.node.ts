@@ -516,7 +516,7 @@ export class ContaAzul implements INodeType {
         description: 'Initial due date (format YYYY-MM-DD, required)',
       },
       {
-        displayName: 'Due Date (To)',
+        displayName: 'Due Date (Until)',
         name: 'data_vencimento_ate',
         type: 'dateTime',
         required: true,
@@ -578,7 +578,7 @@ export class ContaAzul implements INodeType {
         description: 'Initial due date (format YYYY-MM-DD, required)',
       },
       {
-        displayName: 'Due Date (To)',
+        displayName: 'Due Date (Until)',
         name: 'data_vencimento_ate_despesa',
         type: 'dateTime',
         required: true,
