@@ -259,7 +259,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'Busca (Categoria)',
+        displayName: 'Search (Category)',
         name: 'busca_categoria',
         type: 'string',
         displayOptions: {
@@ -287,7 +287,7 @@ export class ContaAzul implements INodeType {
         description: 'Tipo da categoria',
       },
       {
-        displayName: 'Página (Categoria)',
+        displayName: 'Page (Category)',
         name: 'pagina_categoria',
         type: 'number',
         displayOptions: {
@@ -299,7 +299,7 @@ export class ContaAzul implements INodeType {
         description: 'Número da página',
       },
       {
-        displayName: 'Tamanho Da Página (Categoria)',
+        displayName: 'Page Size (Category)',
         name: 'tamanho_pagina_categoria',
         type: 'number',
         displayOptions: {
@@ -311,7 +311,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'Nome Da Conta',
+        displayName: 'Account Name',
         name: 'nome_conta',
         type: 'string',
         displayOptions: {
@@ -323,7 +323,7 @@ export class ContaAzul implements INodeType {
         description: 'Nome da conta financeira',
       },
       {
-        displayName: 'Tipos De Conta',
+        displayName: 'Account Types',
         name: 'tipos',
         type: 'multiOptions',
         options: [
