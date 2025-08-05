@@ -9,7 +9,7 @@ describe('ContaAzul Node', () => {
 
   describe('Node Description', () => {
     it('should have correct display name', () => {
-      expect(node.description.displayName).toBe('API Conta Azul');
+      expect(node.description.displayName).toBe('Conta Azul API');
     });
 
     it('should have correct name', () => {
@@ -17,7 +17,7 @@ describe('ContaAzul Node', () => {
     });
 
     it('should have correct description', () => {
-      expect(node.description.description).toBe('Permite fazer requisições à API da Conta Azul');
+      expect(node.description.description).toBe('Allows making requests to the Conta Azul API');
     });
 
     it('should have correct icon', () => {
@@ -53,7 +53,7 @@ describe('ContaAzul Node', () => {
         (prop) => prop.name === 'operation'
       );
       expect(operationProperty).toBeDefined();
-      expect(operationProperty?.displayName).toBe('Operação');
+      expect(operationProperty?.displayName).toBe('Operation');
       expect(operationProperty?.type).toBe('options');
     });
 
