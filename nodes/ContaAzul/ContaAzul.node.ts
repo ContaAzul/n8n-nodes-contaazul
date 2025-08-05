@@ -15,7 +15,7 @@ import { createPerson } from './pessoas';
 
 export class ContaAzul implements INodeType {
   description: INodeTypeDescription = {
-    displayName: 'API Conta Azul',
+    displayName: 'Conta Azul API',
     name: 'contaAzul',
     icon: 'file:contaazul.svg',
     group: ['transform'],
@@ -47,14 +47,14 @@ export class ContaAzul implements INodeType {
           { name: 'Search Expenses By Filter', value: 'getExpensesByFilter' },
           { name: 'Search Financial Accounts', value: 'getFinancialAccounts' },
           { name: 'Search Installment By ID', value: 'getInstallmentById' },
-          { name: 'Search People By Filter', value: 'getPersonsByFilter' },
           { name: 'Search Person By ID', value: 'getPersonById' },
+          { name: 'Search Persons By Filter', value: 'getPersonsByFilter' },
           { name: 'Search Products By Filter', value: 'getProductsByFilter' },
           { name: 'Search Revenues By Filter', value: 'getRevenuesByFilter' },
-          { name: 'Search Sale By Filter', value: 'getSalesByFilter' },
           { name: 'Search Sale By ID', value: 'getSaleById' },
-          { name: 'Search Service By Filter', value: 'getAllServices' },
+          { name: 'Search Sales By Filter', value: 'getSalesByFilter' },
           { name: 'Search Service By ID', value: 'getServiceById' },
+          { name: 'Search Services By Filter', value: 'getAllServices' },
         ],
         default: 'getAllServices',
       },
@@ -105,7 +105,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Text Search (Sale)',
@@ -129,7 +129,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size (Sale)',
@@ -141,7 +141,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Sale ID',
@@ -178,7 +178,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size (Person)',
@@ -190,7 +190,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Person ID',
@@ -203,7 +203,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'ID (UUID) do cadastro de pessoa para buscar o resumo',
+        description: 'Person ID (UUID) to search for summary',
       },
       {
         displayName: 'Search',
@@ -215,7 +215,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Busca por nome ou código do centro de custo',
+        description: 'Search by name or cost center code',
       },
       {
         displayName: 'Quick Filter',
@@ -232,7 +232,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 'ATIVO',
-        description: 'Filtrar centros de custo por status',
+        description: 'Filter cost centers by status',
       },
       {
         displayName: 'Page',
@@ -244,7 +244,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size',
@@ -256,7 +256,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Search (Category)',
@@ -268,10 +268,10 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Busca por nome ou código da categoria',
+        description: 'Search by name or category code',
       },
       {
-        displayName: 'Tipo',
+        displayName: 'Type',
         name: 'tipo_categoria',
         type: 'options',
         options: [
@@ -284,7 +284,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 'RECEITA',
-        description: 'Tipo da categoria',
+        description: 'Category type',
       },
       {
         displayName: 'Page (Category)',
@@ -296,7 +296,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size (Category)',
@@ -308,10 +308,10 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
-        displayName: 'Account Name',
+        displayName: 'Financial Account Name',
         name: 'nome_conta',
         type: 'string',
         displayOptions: {
@@ -320,10 +320,9 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Nome da conta financeira',
       },
       {
-        displayName: 'Account Types',
+        displayName: 'Financial Account Types',
         name: 'tipos',
         type: 'multiOptions',
         options: [
@@ -344,10 +343,9 @@ export class ContaAzul implements INodeType {
           },
         },
         default: [],
-        description: 'Tipos de conta financeira',
       },
       {
-        displayName: 'Active Only',
+        displayName: 'Only Active',
         name: 'apenas_ativo',
         type: 'boolean',
         displayOptions: {
@@ -359,7 +357,7 @@ export class ContaAzul implements INodeType {
         description: 'Whether to filter only active accounts',
       },
       {
-        displayName: 'Página',
+        displayName: 'Page',
         name: 'pagina_conta',
         type: 'number',
         displayOptions: {
@@ -368,10 +366,10 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
-        displayName: 'Tamanho Da Página',
+        displayName: 'Page Size',
         name: 'tamanho_pagina_conta',
         type: 'number',
         displayOptions: {
@@ -380,7 +378,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Search (Product)',
@@ -392,7 +390,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Buscar produtos por nome ou código',
+        description: 'Search products by name or code',
       },
       {
         displayName: 'Status',
@@ -409,7 +407,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 'TODOS',
-        description: 'Status do produto',
+        description: 'Product status',
       },
       {
         displayName: 'Sort Field',
@@ -427,7 +425,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 'NOME',
-        description: 'Campo para ordenar os resultados',
+        description: 'Field to order results',
       },
       {
         displayName: 'Sort Direction',
@@ -454,7 +452,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size (Product)',
@@ -466,7 +464,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Search (Revenue)',
@@ -478,7 +476,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Buscar receitas por nome, número, etc',
+        description: 'Search revenues by name, number, etc',
       },
       {
         displayName: 'Page (Revenue)',
@@ -490,7 +488,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size (Revenue)',
@@ -502,7 +500,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Due Date (From)',
@@ -515,7 +513,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Data inicial de vencimento (formato YYYY-MM-DD, obrigatório)',
+        description: 'Initial due date (format YYYY-MM-DD, required)',
       },
       {
         displayName: 'Due Date (Until)',
@@ -528,7 +526,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Data final de vencimento (formato YYYY-MM-DD, obrigatório)',
+        description: 'Final due date (format YYYY-MM-DD, required)',
       },
       {
         displayName: 'Search (Expense)',
@@ -540,7 +538,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Buscar despesas por nome, número, etc',
+        description: 'Search expenses by name, number, etc',
       },
       {
         displayName: 'Page (Expense)',
@@ -552,7 +550,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 1,
-        description: 'Número da página',
+        description: 'Page number',
       },
       {
         displayName: 'Page Size (Expense)',
@@ -564,7 +562,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 10,
-        description: 'Quantidade de itens por página',
+        description: 'Number of items per page',
       },
       {
         displayName: 'Due Date (From)',
@@ -577,7 +575,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Data inicial de vencimento (formato YYYY-MM-DD, obrigatório)',
+        description: 'Initial due date (format YYYY-MM-DD, required)',
       },
       {
         displayName: 'Due Date (Until)',
@@ -590,7 +588,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Data final de vencimento (formato YYYY-MM-DD, obrigatório)',
+        description: 'Final due date (format YYYY-MM-DD, required)',
       },
       {
         displayName: 'Installment ID',
@@ -603,7 +601,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'ID (UUID) da parcela para buscar',
+        description: 'Installment ID (UUID) to search for',
       },
       {
         displayName: 'Product Name',
@@ -628,7 +626,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Código SKU do produto',
+        description: 'Product SKU code',
       },
       {
         displayName: 'EAN',
@@ -640,7 +638,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Código EAN do produto',
+        description: 'Product EAN code',
       },
       {
         displayName: 'Observation',
@@ -652,7 +650,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'Observação do produto',
+        description: 'Product observation',
       },
       {
         displayName: 'Stock Quantity',
@@ -664,7 +662,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Quantidade total em estoque',
+        description: 'Total stock quantity',
       },
       {
         displayName: 'Sale Value',
@@ -676,7 +674,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Valor de venda do produto',
+        description: 'Product sale value',
       },
       {
         displayName: 'Average Cost',
@@ -688,7 +686,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Custo médio do produto',
+        description: 'Product average cost',
       },
       {
         displayName: 'Minimum Stock',
@@ -700,7 +698,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Estoque mínimo do produto',
+        description: 'Product minimum stock',
       },
       {
         displayName: 'Maximum Stock',
@@ -712,7 +710,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Estoque máximo do produto',
+        description: 'Product maximum stock',
       },
       {
         displayName: 'Height (Cm)',
@@ -724,7 +722,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Altura do produto em centímetros',
+        description: 'Product height in centimeters',
       },
       {
         displayName: 'Width (Cm)',
@@ -736,7 +734,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Largura do produto em centímetros',
+        description: 'Product width in centimeters',
       },
       {
         displayName: 'Depth (Cm)',
@@ -748,7 +746,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 0,
-        description: 'Profundidade do produto em centímetros',
+        description: 'Product depth in centimeters',
       },
       {
         displayName: 'Format',
@@ -762,7 +760,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: 'SIMPLES',
-        description: 'Formato do produto (apenas simples)',
+        description: 'Product format (only simple)',
       },
       {
         displayName: 'Person Type',
@@ -879,7 +877,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'CPF da pessoa física',
+        description: 'CPF of the physical person',
       },
       {
         displayName: 'CNPJ',
@@ -892,7 +890,7 @@ export class ContaAzul implements INodeType {
           },
         },
         default: '',
-        description: 'CNPJ da pessoa jurídica',
+        description: 'CNPJ of the legal person',
       },
       {
         displayName: 'Country',
@@ -901,7 +899,7 @@ export class ContaAzul implements INodeType {
         required: true,
         displayOptions: { show: { operation: ['createPerson'] } },
         default: 'Brasil',
-        description: 'País do endereço (fixo Brasil)',
+        description: 'Address country (fixed Brasil)',
       },
       {
         displayName: 'Client ID',
@@ -910,7 +908,7 @@ export class ContaAzul implements INodeType {
         required: true,
         displayOptions: { show: { operation: ['createSale'] } },
         default: '',
-        description: 'UUID do cliente associado à venda',
+        description: 'UUID of the client associated with the sale',
       },
       {
         displayName: 'Sale Number',
@@ -927,7 +925,7 @@ export class ContaAzul implements INodeType {
         required: true,
         displayOptions: { show: { operation: ['createSale'] } },
         default: '',
-        description: 'Data da venda (formato YYYY-MM-DDTHH:mm:ssZ)',
+        description: 'Sale date (format YYYY-MM-DDTHH:mm:ssZ)',
       },
       {
         displayName: 'Payment Condition Option',
@@ -951,7 +949,7 @@ export class ContaAzul implements INodeType {
         options: [
           {
             name: 'parcela',
-            displayName: 'Parcela',
+            displayName: 'Installment',
             values: [
               {
                 displayName: 'Due Date',
@@ -976,7 +974,7 @@ export class ContaAzul implements INodeType {
             ],
           },
         ],
-        description: 'Parcelas da venda',
+        description: 'Sale installments',
       },
       {
         displayName: 'Payment Method',
@@ -1022,7 +1020,7 @@ export class ContaAzul implements INodeType {
         required: true,
         displayOptions: { show: { operation: ['createSale'] } },
         default: 'EM_ANDAMENTO',
-        description: 'Situação da venda',
+        description: 'Sale status',
       },
       {
         displayName: 'Observations',
@@ -1030,7 +1028,7 @@ export class ContaAzul implements INodeType {
         type: 'string',
         displayOptions: { show: { operation: ['createSale'] } },
         default: '',
-        description: 'Observações da venda',
+        description: 'Sale observations',
       },
       {
         displayName: 'Payment Observations',
