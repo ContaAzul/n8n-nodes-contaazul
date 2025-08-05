@@ -347,7 +347,7 @@ export class ContaAzul implements INodeType {
         description: 'Tipos de conta financeira',
       },
       {
-        displayName: 'Apenas Ativos',
+        displayName: 'Active Only',
         name: 'apenas_ativo',
         type: 'boolean',
         displayOptions: {
@@ -383,7 +383,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'Busca (Produto)',
+        displayName: 'Search (Product)',
         name: 'busca_produto',
         type: 'string',
         displayOptions: {
@@ -412,7 +412,7 @@ export class ContaAzul implements INodeType {
         description: 'Status do produto',
       },
       {
-        displayName: 'Campo De Ordenação',
+        displayName: 'Sort Field',
         name: 'campo_ordenacao',
         type: 'options',
         options: [
@@ -430,7 +430,7 @@ export class ContaAzul implements INodeType {
         description: 'Campo para ordenar os resultados',
       },
       {
-        displayName: 'Direção Da Ordenação',
+        displayName: 'Sort Direction',
         name: 'direcao_ordenacao',
         type: 'options',
         options: [
@@ -445,7 +445,7 @@ export class ContaAzul implements INodeType {
         default: 'ASC',
       },
       {
-        displayName: 'Página (Produto)',
+        displayName: 'Page (Product)',
         name: 'pagina_produto',
         type: 'number',
         displayOptions: {
