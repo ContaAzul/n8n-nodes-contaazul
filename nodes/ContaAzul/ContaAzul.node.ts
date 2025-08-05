@@ -457,7 +457,7 @@ export class ContaAzul implements INodeType {
         description: 'Número da página',
       },
       {
-        displayName: 'Tamanho Da Página (Produto)',
+        displayName: 'Page Size (Product)',
         name: 'tamanho_pagina_produto',
         type: 'number',
         displayOptions: {
@@ -469,7 +469,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'Busca (Receita)',
+        displayName: 'Search (Revenue)',
         name: 'busca_receita',
         type: 'string',
         displayOptions: {
@@ -481,7 +481,7 @@ export class ContaAzul implements INodeType {
         description: 'Buscar receitas por nome, número, etc',
       },
       {
-        displayName: 'Página (Receita)',
+        displayName: 'Page (Revenue)',
         name: 'pagina_receita',
         type: 'number',
         displayOptions: {
@@ -493,7 +493,7 @@ export class ContaAzul implements INodeType {
         description: 'Número da página',
       },
       {
-        displayName: 'Tamanho Da Página (Receita)',
+        displayName: 'Page Size (Revenue)',
         name: 'tamanho_pagina_receita',
         type: 'number',
         displayOptions: {
