@@ -9,7 +9,7 @@ describe('ContaAzul Node', () => {
 
   describe('Node Description', () => {
     it('should have correct display name', () => {
-      expect(node.description.displayName).toBe('API Conta Azul');
+      expect(node.description.displayName).toBe('Conta Azul API');
     });
 
     it('should have correct name', () => {
