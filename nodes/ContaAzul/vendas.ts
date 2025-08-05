@@ -56,7 +56,7 @@ export async function createSale(this: IExecuteFunctions) {
   const totalParcelas = parcelas.reduce((acc, parcela) => acc + parcela.valor, 0);
   if (totalItens !== totalParcelas) {
     throw new Error(
-      `O valor total dos itens (R$ ${totalItens}) deve ser igual ao valor total das parcelas (R$ ${totalParcelas}).`,
+      `The total value of items (R$ ${totalItens}) must be equal to the total value of installments (R$ ${totalParcelas}).`,
     );
   }
 

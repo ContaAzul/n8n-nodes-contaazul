@@ -1,113 +1,130 @@
 # n8n-nodes-contaazul
 
-Este é um node da comunidade n8n que permite integrar com a API da Conta Azul em seus workflows.
+This is an n8n community node that allows integration with the Conta Azul API in your workflows.
 
-A Conta Azul é uma plataforma de gestão empresarial que oferece soluções para controle financeiro, vendas, produtos, serviços e gestão de clientes. Este node permite automatizar operações como busca de vendas, criação de produtos, gestão de clientes e consultas financeiras.
+Conta Azul is a business management platform that offers solutions for financial control, sales, products, services, and customer management. This node allows you to automate operations such as sales searches, product creation, customer management, and financial queries.
 
-[n8n](https://n8n.io/) é uma plataforma de automação de workflows com [licença fair-code](https://docs.n8n.io/reference/license/).
+[n8n](https://n8n.io/) is a workflow automation platform with [fair-code license](https://docs.n8n.io/reference/license/).
 
-[Instalação](#instalação)  
-[Operações](#operações)  
-[Credenciais](#credenciais)  
-[Compatibilidade](#compatibilidade)  
-[Uso](#uso)  
-[Recursos](#recursos)  
-[Histórico de versões](#histórico-de-versões)  
+[Installation](#installation)  
+[Operations](#operations)  
+[Credentials](#credentials)  
+[Compatibility](#compatibility)  
+[Usage](#usage)  
+[Resources](#resources)  
+[Version History](#version-history)
 
-## Instalação
+## Installation
 
-Siga o [guia de instalação](https://docs.n8n.io/integrations/community-nodes/installation/) na documentação de nodes da comunidade n8n.
+Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
 
-## Operações
+## Operations
 
-### Serviços
-- **Buscar serviço por filtro**: Lista serviços com filtros de busca textual e paginação
-- **Buscar serviço por ID**: Obtém detalhes de um serviço específico
+### Services
 
-### Vendas
-- **Buscar venda por filtro**: Lista vendas com filtros de busca textual e paginação
-- **Buscar venda por ID**: Obtém detalhes de uma venda específica
-- **Criar venda**: Cria uma nova venda com itens, cliente e forma de pagamento
+- **Search service by filter**: Lists services with text search filters and pagination
+- **Search service by ID**: Gets details of a specific service
 
-### Pessoas - Clientes/Fornecedores
-- **Buscar pessoas por filtro**: Lista pessoas clientes/fornecedores com filtros de busca
-- **Buscar pessoa por ID**: Obtém detalhes de uma pessoa específica
-- **Criar pessoa**: Cria uma nova pessoa cliente/fornecedor
+### Sales
 
-### Produtos
-- **Buscar produtos por filtro**: Lista produtos com filtros de busca
-- **Criar produto**: Cria um novo produto
+- **Search sale by filter**: Lists sales with text search filters and pagination
+- **Search sale by ID**: Gets details of a specific sale
+- **Create sale**: Creates a new sale with items, customer, and payment method
 
-### Financeiro
-- **Buscar contas financeiras**: Lista todas as contas financeiras
-- **Buscar receitas por filtro**: Lista receitas com filtros
-- **Buscar despesas por filtro**: Lista despesas com filtros
-- **Buscar parcela por ID**: Obtém detalhes de uma parcela específica
-- **Buscar categorias**: Lista todas as categorias disponíveis
-- **Buscar centros de custos**: Lista todos os centros de custo
+### People - Customers/Suppliers
 
+- **Search people by filter**: Lists customer/supplier people with search filters
+- **Search person by ID**: Gets details of a specific person
+- **Create person**: Creates a new customer/supplier person
 
-## Credenciais
+### Products
 
-Para usar este node, você precisa de uma conta na Conta Azul e configurar as credenciais OAuth2.
+- **Search products by filter**: Lists products with search filters
+- **Create product**: Creates a new product
 
-### Pré-requisitos
-1. Ter uma conta ativa na Conta Azul
-2. Acessar o painel de desenvolvedores da Conta Azul
-3. Criar um aplicativo para obter o Client ID e Client Secret
+### Financial
 
-### Configuração das Credenciais
-1. No n8n, vá para **Settings** > **Credentials**
-2. Clique em **Add Credential**
-3. Selecione **Conta Azul OAuth2 API**
-4. Preencha os campos:
-   - **Client ID**: Seu Client ID da Conta Azul
-   - **Client Secret**: Seu Client Secret da Conta Azul
-   - **Scope**: `openid profile aws.cognito.signin.user.admin` (padrão)
-   - **Auth URL**: `https://auth.contaazul.com/oauth2/authorize` (padrão)
-   - **Token URL**: `https://auth.contaazul.com/oauth2/token` (padrão)
-5. Clique em **Save** e autorize o aplicativo
+- **Search financial accounts**: Lists all financial accounts
+- **Search revenues by filter**: Lists revenues with filters
+- **Search expenses by filter**: Lists expenses with filters
+- **Search installment by ID**: Gets details of a specific installment
+- **Search categories**: Lists all available categories
+- **Search cost centers**: Lists all cost centers
 
-## Compatibilidade
+## Credentials
 
-- **Versão mínima do n8n**: 1.0.0
-- **Versões testadas**: 1.0.0, 1.1.0, 1.2.0
+To use this node, you need a Conta Azul account and configure OAuth2 credentials.
+
+### Prerequisites
+
+1. Have an active Conta Azul account
+2. Access the Conta Azul developer panel
+3. Create an application to get the Client ID and Client Secret
+
+### Credential Configuration
+
+1. In n8n, go to **Settings** > **Credentials**
+2. Click **Add Credential**
+3. Select **Conta Azul OAuth2 API**
+4. Fill in the fields:
+   - **Client ID**: Your Conta Azul Client ID
+   - **Client Secret**: Your Conta Azul Client Secret
+   - **Scope**: `openid profile aws.cognito.signin.user.admin` (default)
+   - **Auth URL**: `https://auth.contaazul.com/oauth2/authorize` (default)
+   - **Token URL**: `https://auth.contaazul.com/oauth2/token` (default)
+5. Click **Save** and authorize the application
+
+## Compatibility
+
+- **Minimum n8n version**: 1.0.0
+- **Tested versions**: 1.0.0, 1.1.0, 1.2.0
 - **Node.js**: >=20.15
 
-## Uso
+## Usage
 
-### Exemplo: Buscar Vendas Recentes
-1. Adicione o node **Conta Azul** ao seu workflow
-2. Configure as credenciais
-3. Selecione a operação **Buscar venda por filtro**
-4. Configure os parâmetros de busca (opcional)
-5. Execute o workflow
+### Example: Search Recent Sales
 
-### Exemplo: Criar uma Nova Venda
-1. Adicione o node **Conta Azul** ao seu workflow
-2. Configure as credenciais
-3. Selecione a operação **Criar venda**
-4. Preencha os dados obrigatórios:
-   - ID do cliente
-   - Forma de pagamento
-   - Itens da venda
-5. Execute o workflow
+1. Add the **Conta Azul** node to your workflow
+2. Configure credentials
+3. Select the **Search sale by filter** operation
+4. Configure search parameters (optional)
+5. Execute the workflow
 
-### Exemplo: Sincronizar Produtos
-1. Use o node **Conta Azul** com operação **Buscar produtos por filtro**
-2. Conecte com outros nodes para processar os dados
-3. Use webhooks para sincronização automática
+### Example: Create a New Sale
 
-## Recursos
+1. Add the **Conta Azul** node to your workflow
+2. Configure credentials
+3. Select the **Create sale** operation
+4. Fill in required data:
+   - Customer ID
+   - Payment method
+   - Sale items
+5. Execute the workflow
 
-* [Documentação de nodes da comunidade n8n](https://docs.n8n.io/integrations/#community-nodes)
-* [Documentação da API da Conta Azul](https://developers.contaazul.com/guide)
-* [Painel de desenvolvedores da Conta Azul](https://developers-portal.contaazul.com)
-* [Experimente o n8n](https://docs.n8n.io/try-it-out/)
+### Example: Sync Products
 
-## Histórico de versões
+1. Use the **Conta Azul** node with **Search products by filter** operation
+2. Connect with other nodes to process data
+3. Use webhooks for automatic synchronization
 
-### v0.1.0
-- Implementação inicial do node
-- Suporte a operações básicas busca de serviços, vendas, pessoas, produtos, categorias, centros de custo e financeiro
-- Integração com OAuth2 da Conta Azul
+## Resources
+
+- [n8n Community Nodes Documentation](https://docs.n8n.io/integrations/#community-nodes)
+- [Conta Azul API Documentation](https://developers.contaazul.com/guide)
+- [Conta Azul Developer Portal](https://developers-portal.contaazul.com)
+- [Try n8n](https://docs.n8n.io/try-it-out/)
+
+## Version History
+
+### v0.3.2
+
+- Fixed n8n-workflow dependency configuration
+- Removed postinstall script
+- Removed resolutions and overrides
+- Updated to latest n8n-workflow version
+
+### v0.3.1
+
+- Initial implementation of the node
+- Support for basic operations: search services, sales, people, products, categories, cost centers, and financial
+- Integration with Conta Azul OAuth2
