@@ -169,7 +169,7 @@ export class ContaAzul implements INodeType {
         description: 'Search by document, customer name or company name',
       },
       {
-        displayName: 'Página (Pessoa)',
+        displayName: 'Page (Person)',
         name: 'pagina_pessoa',
         type: 'number',
         displayOptions: {
@@ -181,7 +181,7 @@ export class ContaAzul implements INodeType {
         description: 'Número da página',
       },
       {
-        displayName: 'Tamanho Da Página (Pessoa)',
+        displayName: 'Page Size (Person)',
         name: 'tamanho_pagina_pessoa',
         type: 'number',
         displayOptions: {
@@ -193,7 +193,7 @@ export class ContaAzul implements INodeType {
         description: 'Quantidade de itens por página',
       },
       {
-        displayName: 'ID Da Pessoa',
+        displayName: 'Person ID',
         name: 'personId',
         type: 'string',
         required: true,
@@ -206,7 +206,7 @@ export class ContaAzul implements INodeType {
         description: 'ID (UUID) do cadastro de pessoa para buscar o resumo',
       },
       {
-        displayName: 'Busca',
+        displayName: 'Search',
         name: 'busca_centro',
         type: 'string',
         displayOptions: {
@@ -218,7 +218,7 @@ export class ContaAzul implements INodeType {
         description: 'Busca por nome ou código do centro de custo',
       },
       {
-        displayName: 'Filtro Rápido',
+        displayName: 'Quick Filter',
         name: 'filtro_rapido',
         type: 'options',
         options: [
