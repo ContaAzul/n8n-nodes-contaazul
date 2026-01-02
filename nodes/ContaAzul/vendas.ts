@@ -13,7 +13,7 @@ export async function getSalesByFilter(this: IExecuteFunctions) {
     qs.busca_textual = busca_textual;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/venda/busca',
     qs,
@@ -24,7 +24,7 @@ export async function getSalesByFilter(this: IExecuteFunctions) {
 
 export async function getSaleById(this: IExecuteFunctions) {
   const saleId = this.getNodeParameter('saleId', 0) as string;
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: `https://api-v2.contaazul.com/v1/venda/${saleId}`,
     json: true,
@@ -87,7 +87,7 @@ export async function createSale(this: IExecuteFunctions) {
   const observacoes_pagamento = this.getNodeParameter('observacoes_pagamento', 0, '');
   if (observacoes_pagamento) body.observacoes_pagamento = observacoes_pagamento;
 
-  const response = await this.helpers.requestOAuth2.call(this, 'contaAzulOAuth2Api', {
+  const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'POST',
     url: 'https://api-v2.contaazul.com/v1/venda',
     body,

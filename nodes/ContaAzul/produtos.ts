@@ -19,7 +19,7 @@ export async function getProductsByFilter(this: IExecuteFunctions) {
     qs.busca = busca;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/produto/busca',
     qs,
@@ -49,7 +49,7 @@ export async function createProduct(this: IExecuteFunctions) {
     },
   };
 
-  const response = await this.helpers.requestOAuth2.call(this, 'contaAzulOAuth2Api', {
+  const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'POST',
     url: 'https://api-v2.contaazul.com/v1/produto',
     body,

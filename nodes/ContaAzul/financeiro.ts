@@ -20,7 +20,7 @@ export async function getFinancialAccounts(this: IExecuteFunctions) {
     qs.tipos = tipos;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/conta-financeira',
     qs,
@@ -49,7 +49,7 @@ export async function getRevenuesByFilter(this: IExecuteFunctions) {
     qs.busca = busca;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/financeiro/eventos-financeiros/contas-a-receber/buscar',
     qs,
@@ -78,7 +78,7 @@ export async function getExpensesByFilter(this: IExecuteFunctions) {
     qs.busca = busca;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/financeiro/eventos-financeiros/contas-a-pagar/buscar',
     qs,
@@ -89,7 +89,7 @@ export async function getExpensesByFilter(this: IExecuteFunctions) {
 
 export async function getInstallmentById(this: IExecuteFunctions) {
   const installmentId = this.getNodeParameter('installmentId', 0) as string;
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication?.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: `https://api-v2.contaazul.com/v1/financeiro/eventos-financeiros/parcelas/${installmentId}`,
     json: true,
