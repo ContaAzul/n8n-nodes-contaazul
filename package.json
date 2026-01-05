@@ -49,7 +49,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:package": "node scripts/test-package.js",
-    "release": "release-it --config release-it.config.js",
+    "release": "release-it --config release-it.config.js --ci",
     "release:preview": "npm run release --ci --dry-run",
     "cov": "jest --coverage"
   },

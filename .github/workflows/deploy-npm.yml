@@ -69,4 +69,4 @@ jobs:
 
       # Release and publish version
       - name: Release version
-        run: npm run release --ci --npm.skipChecks
+        run: npm run release
