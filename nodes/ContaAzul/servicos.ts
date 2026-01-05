@@ -13,7 +13,7 @@ export async function getAllServices(this: IExecuteFunctions) {
     qs.busca_textual = busca_textual;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/servicos',
     qs,
@@ -24,7 +24,7 @@ export async function getAllServices(this: IExecuteFunctions) {
 
 export async function getServiceById(this: IExecuteFunctions) {
   const serviceId = this.getNodeParameter('serviceId', 0) as string;
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: `https://api-v2.contaazul.com/v1/servicos/${serviceId}`,
     json: true,

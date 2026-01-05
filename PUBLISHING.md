@@ -1,79 +1,58 @@
 # Guia de Publicação no npm
 
-Este documento explica como publicar o node ContaAzul no npm.
+Este documento explica o processo de publicação do node ContaAzul no npm.
 
-## Pré-requisitos
+## Processo de Publicação
 
-1. **Conta no npm**: Crie uma conta em https://www.npmjs.com/signup
-2. **Login no npm**: Execute `npm login` no terminal
-3. **Nome único**: Verifique se o nome `n8n-nodes-contaazul` está disponível
+A publicação deste pacote no npm é realizada **exclusivamente através da esteira de produção**.
 
-## Passo a Passo
+## Versionamento
 
-### 1. Preparar o código
+O versionamento segue o padrão [Semantic Versioning](https://semver.org/):
 
-```bash
-# Instalar dependências
-npm install
+- **MAJOR** (X.0.0): Mudanças incompatíveis com versões anteriores
+- **MINOR** (0.X.0): Novas funcionalidades compatíveis
+- **PATCH** (0.0.X): Correções de bugs compatíveis
 
-# Executar testes
-npm test
+A versão é gerenciada automaticamente pela esteira através dos commits convencionais.
 
-# Fazer build do projeto
-npm run build
+## Fluxo de Deploy
 
-# Verificar se o pacote está pronto
-npm run test:package
-```
+1. **Desenvolvimento**: Desenvolva e teste localmente
 
-### 2. Verificar versão
+   ```bash
+   npm install
+   npm test
+   npm run build
+   npm run test:package
+   ```
 
-Edite o `package.json` e atualize a versão seguindo [versionamento semântico](https://semver.org/):
+2. **Commit**: Use commits convencionais para controle de versão
 
-- **MAJOR**: Mudanças incompatíveis com versões anteriores
-- **MINOR**: Novas funcionalidades compatíveis
-- **PATCH**: Correções de bugs compatíveis
+   ```bash
+   git add .
+   git commit -m "feat: nova funcionalidade"
+   # ou
+   git commit -m "fix: correção de bug"
+   ```
 
-Exemplo: `"version": "0.1.1"`
+3. **Push**: Envie para o repositório
 
-### 3. Commit e push
+   ```bash
+   git push origin main
+   ```
 
-```bash
-git add .
-git commit -m "v0.1.1: descrição das mudanças"
-git push origin main
-```
-
-### 4. Publicar no npm
-
-```bash
-# Publicar (primeira vez)
-npm publish --access public
-
-# Para atualizações futuras
-npm publish
-```
+4. **Deploy Automático**: A esteira de produção irá:
+   - Executar testes
+   - Fazer build do projeto
+   - Atualizar a versão automaticamente
+   - Publicar no npm registry
 
 ## Verificação pós-publicação
 
-1. Acesse https://www.npmjs.com/package/n8n-nodes-contaazul
-2. Verifique se todos os arquivos estão incluídos
-3. Teste a instalação: `npm install n8n-nodes-contaazul`
-
-## Troubleshooting
-
-### Erro: "You must be logged in to publish packages"
-```bash
-npm login
-```
-
-### Erro: "Package name already exists"
-- Escolha outro nome no `package.json`
-- Ou use um escopo: `@seuusuario/n8n-nodes-contaazul`
-
-### Erro: "Access denied"
-- Verifique se está logado com a conta correta
-- Use `npm whoami` para verificar
+1. Acesse https://www.npmjs.com/package/@contaazul/n8n-nodes-contaazul
+2. Verifique se a versão foi publicada corretamente
+3. Monitore os logs da esteira para confirmar sucesso
 
 ## Estrutura do pacote publicado
 
@@ -98,4 +77,4 @@ n8n-nodes-contaazul/
 - O campo `files` no `package.json` controla o que será publicado
 - O `.npmignore` exclui arquivos desnecessários
 - Sempre teste localmente antes de publicar
-- Mantenha o README.md atualizado 
+- Mantenha o README.md atualizado
