@@ -10,7 +10,10 @@ module.exports = {
     release: true,
     releaseName: 'v${version}',
     tokenRef: 'GH_TOKEN',
-  },
+	},
+	npm: {
+    skipChecks: true
+  }
   // plugins: {
   //   './.github/workflows/scripts/conventional-changelog.js': {},
   // },
