@@ -13,7 +13,7 @@ export async function getPersonsByFilter(this: IExecuteFunctions) {
     qs.termo_busca = termo_busca;
   }
 
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: 'https://api-v2.contaazul.com/v1/pessoa',
     qs,
@@ -24,7 +24,7 @@ export async function getPersonsByFilter(this: IExecuteFunctions) {
 
 export async function getPersonById(this: IExecuteFunctions) {
   const personId = this.getNodeParameter('personId', 0) as string;
-  const responseData = await this.helpers.requestOAuth2?.call(this, 'contaAzulOAuth2Api', {
+  const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
     url: `https://api-v2.contaazul.com/v1/pessoa/${personId}/resumo`,
     json: true,
@@ -64,7 +64,7 @@ export async function createPerson(this: IExecuteFunctions) {
     body.cnpj = this.getNodeParameter('cnpj', 0, null);
   }
 
-  const response = await this.helpers.requestOAuth2.call(this, 'contaAzulOAuth2Api', {
+  const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'POST',
     url: 'https://api-v2.contaazul.com/v1/pessoa',
     body,
