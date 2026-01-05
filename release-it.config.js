@@ -11,6 +11,9 @@ module.exports = {
     releaseName: 'v${version}',
     tokenRef: 'GH_TOKEN',
   },
+  npm: {
+    publish: false,
+  },
   // plugins: {
   //   './.github/workflows/scripts/conventional-changelog.js': {},
   // },
