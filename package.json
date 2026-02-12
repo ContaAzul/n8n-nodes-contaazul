@@ -1,7 +1,7 @@
 {
   "name": "@contaazul/n8n-nodes-contaazul",
   "version": "0.3.12",
-  "description": "Node para integração com a API da Conta Azul no n8n",
+  "description": "Node for integration with Conta Azul API in n8n",
   "keywords": [
     "n8n-community-node-package",
     "conta-azul",

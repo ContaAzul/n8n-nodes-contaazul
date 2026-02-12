@@ -21,5 +21,13 @@ export async function getCategories(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData);
+  const dataArray = Array.isArray(responseData) ? responseData : [responseData];
+  const items = dataArray.map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }

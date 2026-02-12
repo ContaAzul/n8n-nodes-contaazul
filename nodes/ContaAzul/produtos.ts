@@ -21,11 +21,18 @@ export async function getProductsByFilter(this: IExecuteFunctions) {
 
   const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
-    url: 'https://api-v2.contaazul.com/v1/produto/busca',
+    url: 'https://api-v2.contaazul.com/v1/produtos',
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData.itens);
+  const items = (responseData.items || []).map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function createProduct(this: IExecuteFunctions) {
@@ -42,7 +49,7 @@ export async function createProduct(this: IExecuteFunctions) {
       estoque_minimo: this.getNodeParameter('estoque_minimo', 0),
       estoque_maximo: this.getNodeParameter('estoque_maximo', 0),
     },
-    dimensao: {
+    pesos_dimensoes: {
       altura: this.getNodeParameter('altura', 0),
       largura: this.getNodeParameter('largura', 0),
       profundidade: this.getNodeParameter('profundidade', 0),
@@ -51,10 +58,21 @@ export async function createProduct(this: IExecuteFunctions) {
 
   const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'POST',
-    url: 'https://api-v2.contaazul.com/v1/produto',
+    url: 'https://api-v2.contaazul.com/v1/produtos',
     body,
     json: true,
   });
 
   return [{ json: response }];
+}
+
+export async function getProductById(this: IExecuteFunctions) {
+  const productId = this.getNodeParameter('productId', 0);
+  const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
+    method: 'GET',
+    url: `https://api-v2.contaazul.com/v1/produtos/${productId}`,
+    json: true,
+  });
+
+  return [{ json: responseData, pairedItem: { item: 0 } }];
 }

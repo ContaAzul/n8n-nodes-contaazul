@@ -1,6 +1,6 @@
 import { IExecuteFunctions, INodeType, INodeTypeDescription, NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { getAllServices, getServiceById } from './servicos';
-import { getProductsByFilter, createProduct } from './produtos';
+import { getProductsByFilter, createProduct, getProductById } from './produtos';
 import { getCategories } from './categorias';
 import { getCostCenters } from './centroCusto';
 import { getPersonsByFilter, getPersonById } from './pessoas';
@@ -49,6 +49,7 @@ export class ContaAzul implements INodeType {
           { name: 'Search Installment By ID', value: 'getInstallmentById' },
           { name: 'Search Person By ID', value: 'getPersonById' },
           { name: 'Search Persons By Filter', value: 'getPersonsByFilter' },
+          { name: 'Search Product By ID', value: 'getProductById' },
           { name: 'Search Products By Filter', value: 'getProductsByFilter' },
           { name: 'Search Revenues By Filter', value: 'getRevenuesByFilter' },
           { name: 'Search Sale By ID', value: 'getSaleById' },
@@ -57,6 +58,19 @@ export class ContaAzul implements INodeType {
           { name: 'Search Services By Filter', value: 'getAllServices' },
         ],
         default: 'getAllServices',
+      },
+      {
+        displayName: 'Product ID',
+        name: 'productId',
+        type: 'string',
+        required: true,
+        displayOptions: {
+          show: {
+            operation: ['getProductById'],
+          },
+        },
+        default: '',
+        description: 'Product ID (UUID)',
       },
       {
         displayName: 'Service ID',
@@ -399,14 +413,13 @@ export class ContaAzul implements INodeType {
         options: [
           { name: 'Ativo', value: 'ATIVO' },
           { name: 'Inativo', value: 'INATIVO' },
-          { name: 'Todos', value: 'TODOS' },
         ],
         displayOptions: {
           show: {
             operation: ['getProductsByFilter'],
           },
         },
-        default: 'TODOS',
+        default: 'ATIVO',
         description: 'Product status',
       },
       {
@@ -417,7 +430,6 @@ export class ContaAzul implements INodeType {
           { name: 'Nome', value: 'NOME' },
           { name: 'Código', value: 'CODIGO' },
           { name: 'Valor De Venda', value: 'VALOR_VENDA' },
-          { name: 'Estoque', value: 'ESTOQUE' },
         ],
         displayOptions: {
           show: {
@@ -767,13 +779,13 @@ export class ContaAzul implements INodeType {
         name: 'tipo_pessoa',
         type: 'options',
         options: [
-          { name: 'Física', value: 'FISICA' },
-          { name: 'Jurídica', value: 'JURIDICA' },
-          { name: 'Estrangeira', value: 'ESTRANGEIRA' },
+          { name: 'Física', value: 'Física' },
+          { name: 'Jurídica', value: 'Jurídica' },
+          { name: 'Estrangeira', value: 'Estrangeira' },
         ],
         required: true,
         displayOptions: { show: { operation: ['createPerson'] } },
-        default: 'FISICA',
+        default: 'Física',
       },
       {
         displayName: 'Name',
@@ -803,9 +815,9 @@ export class ContaAzul implements INodeType {
         name: 'tipo_perfil',
         type: 'multiOptions',
         options: [
-          { name: 'Cliente', value: 'CLIENTE' },
-          { name: 'Fornecedor', value: 'FORNECEDOR' },
-          { name: 'Transportadora', value: 'TRANSPORTADORA' },
+          { name: 'Cliente', value: 'Cliente' },
+          { name: 'Fornecedor', value: 'Fornecedor' },
+          { name: 'Transportadora', value: 'Transportadora' },
         ],
         required: true,
         displayOptions: { show: { operation: ['createPerson'] } },
@@ -865,6 +877,7 @@ export class ContaAzul implements INodeType {
         required: true,
         displayOptions: { show: { operation: ['createPerson'] } },
         default: '',
+        description: 'State of the address Example: SP, RJ, MG',
       },
       {
         displayName: 'CPF',
@@ -873,7 +886,7 @@ export class ContaAzul implements INodeType {
         displayOptions: {
           show: {
             operation: ['createPerson'],
-            tipo_pessoa: ['FISICA'],
+            tipo_pessoa: ['Física'],
           },
         },
         default: '',
@@ -886,7 +899,7 @@ export class ContaAzul implements INodeType {
         displayOptions: {
           show: {
             operation: ['createPerson'],
-            tipo_pessoa: ['JURIDICA'],
+            tipo_pessoa: ['Jurídica'],
           },
         },
         default: '',
@@ -1127,6 +1140,10 @@ export class ContaAzul implements INodeType {
       return [await getFinancialAccounts.call(this)];
     }
 
+    if (operation === 'getProductById') {
+      return [await getProductById.call(this)];
+    }
+
     if (operation === 'getProductsByFilter') {
       return [await getProductsByFilter.call(this)];
     }
@@ -1155,6 +1172,6 @@ export class ContaAzul implements INodeType {
       return [await createSale.call(this)];
     }
 
-    throw new NodeOperationError(this.getNode(), 'Operação não suportada');
+    throw new NodeOperationError(this.getNode(), 'Operation not supported');
   }
 }

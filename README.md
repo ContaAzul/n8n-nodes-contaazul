@@ -40,6 +40,7 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 ### Products
 
 - **Search products by filter**: Lists products with search filters
+- **Search product by id** : Get details of a specific product
 - **Create product**: Creates a new product
 
 ### Financial
