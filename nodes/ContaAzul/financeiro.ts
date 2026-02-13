@@ -26,7 +26,15 @@ export async function getFinancialAccounts(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData);
+  const dataArray = Array.isArray(responseData) ? responseData : [responseData];
+  const items = dataArray.map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function getRevenuesByFilter(this: IExecuteFunctions) {
@@ -55,7 +63,14 @@ export async function getRevenuesByFilter(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData.itens);
+  const items = (responseData.itens || []).map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function getExpensesByFilter(this: IExecuteFunctions) {
@@ -84,7 +99,14 @@ export async function getExpensesByFilter(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData.itens);
+  const items = (responseData.itens || []).map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function getInstallmentById(this: IExecuteFunctions) {
@@ -94,5 +116,12 @@ export async function getInstallmentById(this: IExecuteFunctions) {
     url: `https://api-v2.contaazul.com/v1/financeiro/eventos-financeiros/parcelas/${installmentId}`,
     json: true,
   });
-  return this.helpers.returnJsonArray([responseData]);
+  return [
+    {
+      json: responseData,
+      pairedItem: {
+        item: 0,
+      },
+    },
+  ];
 }

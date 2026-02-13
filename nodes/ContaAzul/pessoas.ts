@@ -1,4 +1,4 @@
-import { IExecuteFunctions } from 'n8n-workflow';
+import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 
 export async function getPersonsByFilter(this: IExecuteFunctions) {
   const termo_busca = this.getNodeParameter('termo_busca', 0, '') as string;
@@ -10,32 +10,56 @@ export async function getPersonsByFilter(this: IExecuteFunctions) {
     tamanho_pagina,
   };
   if (termo_busca) {
-    qs.termo_busca = termo_busca;
+    qs.busca = termo_busca;
   }
 
   const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
-    url: 'https://api-v2.contaazul.com/v1/pessoa',
+    url: 'https://api-v2.contaazul.com/v1/pessoas',
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData);
+  const dataArray = Array.isArray(responseData) ? responseData : [responseData];
+  const items = dataArray.map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function getPersonById(this: IExecuteFunctions) {
   const personId = this.getNodeParameter('personId', 0) as string;
   const responseData = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'GET',
-    url: `https://api-v2.contaazul.com/v1/pessoa/${personId}/resumo`,
+    url: `https://api-v2.contaazul.com/v1/pessoas/${personId}`,
     json: true,
   });
-  return this.helpers.returnJsonArray([responseData]);
+  return [
+    {
+      json: responseData,
+      pairedItem: {
+        item: 0,
+      },
+    },
+  ];
 }
 
 export async function createPerson(this: IExecuteFunctions) {
   const tipoPessoa = this.getNodeParameter('tipo_pessoa', 0);
   const tipoPerfilParam = this.getNodeParameter('tipo_perfil', 0);
   const perfisArray = Array.isArray(tipoPerfilParam) ? tipoPerfilParam : [tipoPerfilParam];
+  const estado = this.getNodeParameter('estado', 0) as string;
+
+  if (estado.length !== 2 || !/^[A-Z]{2}$/.test(estado)) {
+    throw new NodeOperationError(
+      this.getNode(),
+      'State must be exactly 2 uppercase letters (example: SC)'
+    );
+  }
+  
   const body: any = {
     tipo_pessoa: tipoPessoa,
     nome: this.getNodeParameter('nome', 0),
@@ -66,7 +90,7 @@ export async function createPerson(this: IExecuteFunctions) {
 
   const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'POST',
-    url: 'https://api-v2.contaazul.com/v1/pessoa',
+    url: 'https://api-v2.contaazul.com/v1/pessoas',
     body,
     json: true,
   });

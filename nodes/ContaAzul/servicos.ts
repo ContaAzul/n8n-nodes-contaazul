@@ -19,7 +19,14 @@ export async function getAllServices(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData.itens);
+  const items = (responseData.itens || []).map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function getServiceById(this: IExecuteFunctions) {
@@ -29,5 +36,13 @@ export async function getServiceById(this: IExecuteFunctions) {
     url: `https://api-v2.contaazul.com/v1/servicos/${serviceId}`,
     json: true,
   });
-  return this.helpers.returnJsonArray([responseData]);
+
+  return [
+    {
+      json: responseData,
+      pairedItem: {
+        item: 0,
+      },
+    },
+  ];
 }

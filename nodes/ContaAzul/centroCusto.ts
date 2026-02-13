@@ -21,5 +21,12 @@ export async function getCostCenters(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData.itens);
+  const items = (responseData.itens || []).map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }

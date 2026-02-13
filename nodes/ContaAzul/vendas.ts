@@ -19,7 +19,14 @@ export async function getSalesByFilter(this: IExecuteFunctions) {
     qs,
     json: true,
   });
-  return this.helpers.returnJsonArray(responseData.itens);
+  const items = (responseData.itens || []).map((item: any) => ({
+    json: item,
+    pairedItem: {
+      item: 0,
+    },
+  }));
+
+  return items;
 }
 
 export async function getSaleById(this: IExecuteFunctions) {
@@ -29,7 +36,14 @@ export async function getSaleById(this: IExecuteFunctions) {
     url: `https://api-v2.contaazul.com/v1/venda/${saleId}`,
     json: true,
   });
-  return this.helpers.returnJsonArray([responseData]);
+  return [
+    {
+      json: responseData,
+      pairedItem: {
+        item: 0,
+      },
+    },
+  ];
 }
 
 export async function createSale(this: IExecuteFunctions) {
