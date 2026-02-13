@@ -1,4 +1,4 @@
-import { IExecuteFunctions } from 'n8n-workflow';
+import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 
 export async function getSalesByFilter(this: IExecuteFunctions) {
   const busca_textual = this.getNodeParameter('busca_textual_venda', 0, '') as string;
@@ -69,7 +69,8 @@ export async function createSale(this: IExecuteFunctions) {
   const totalItens = itens.reduce((acc, item) => acc + item.quantidade * item.valor, 0);
   const totalParcelas = parcelas.reduce((acc, parcela) => acc + parcela.valor, 0);
   if (totalItens !== totalParcelas) {
-    throw new Error(
+    throw new NodeOperationError(
+      this.getNode(),
       `The total value of items (R$ ${totalItens}) must be equal to the total value of installments (R$ ${totalParcelas}).`,
     );
   }
