@@ -1,10 +1,18 @@
 import { IExecuteFunctions } from 'n8n-workflow';
 
 export async function getCostCenters(this: IExecuteFunctions) {
-  const busca = this.getNodeParameter('busca_centro', 0, '') as string;
-  const filtro_rapido = this.getNodeParameter('filtro_rapido', 0, 'ATIVO') as string;
-  const pagina = this.getNodeParameter('pagina_centro', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_centro', 0, 10) as number;
+  const busca = this.getNodeParameter('costCenterAdditionalFields.busca_centro', 0, '') as string;
+  const filtro_rapido = this.getNodeParameter(
+    'costCenterAdditionalFields.filtro_rapido',
+    0,
+    'ATIVO',
+  ) as string;
+  const pagina = this.getNodeParameter('costCenterAdditionalFields.pagina_centro', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'costCenterAdditionalFields.tamanho_pagina_centro',
+    0,
+    10,
+  ) as number;
 
   const qs: any = {
     pagina,

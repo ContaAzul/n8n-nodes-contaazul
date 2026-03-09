@@ -24,6 +24,7 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 - **Search service by filter**: Lists services with text search filters and pagination
 - **Search service by ID**: Gets details of a specific service
+- **Create service**: Creates a new service
 
 ### Sales
 

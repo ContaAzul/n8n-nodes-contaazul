@@ -1,12 +1,16 @@
 import { IExecuteFunctions } from 'n8n-workflow';
 
 export async function getProductsByFilter(this: IExecuteFunctions) {
-  const busca = this.getNodeParameter('busca_produto', 0, '') as string;
-  const status = this.getNodeParameter('status_produto', 0, 'TODOS') as string;
-  const campo_ordenacao = this.getNodeParameter('campo_ordenacao', 0, 'NOME') as string;
-  const direcao_ordenacao = this.getNodeParameter('direcao_ordenacao', 0, 'ASC') as string;
-  const pagina = this.getNodeParameter('pagina_produto', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_produto', 0, 10) as number;
+  const busca = this.getNodeParameter('productAdditionalFields.busca_produto', 0, '') as string;
+  const status = this.getNodeParameter('productAdditionalFields.status_produto', 0, 'ATIVO') as string;
+  const campo_ordenacao = this.getNodeParameter('productAdditionalFields.campo_ordenacao', 0, 'NOME') as string;
+  const direcao_ordenacao = this.getNodeParameter('productAdditionalFields.direcao_ordenacao', 0, 'ASC') as string;
+  const pagina = this.getNodeParameter('productAdditionalFields.pagina_produto', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'productAdditionalFields.tamanho_pagina_produto',
+    0,
+    10,
+  ) as number;
 
   const qs: any = {
     pagina,
@@ -36,25 +40,82 @@ export async function getProductsByFilter(this: IExecuteFunctions) {
 }
 
 export async function createProduct(this: IExecuteFunctions) {
+  const additionalFields = this.getNodeParameter(
+    'productCreateAdditionalFields',
+    0,
+    {},
+  ) as {
+    codigo_sku?: string;
+    estoque_disponivel?: number;
+    valor_venda?: number;
+    codigo_ean?: string;
+    observacao?: string;
+    custo_medio?: number;
+    estoque_minimo?: number;
+    estoque_maximo?: number;
+    altura?: number;
+    largura?: number;
+    profundidade?: number;
+    formato?: string;
+  };
+
   const body: any = {
     nome: this.getNodeParameter('nome', 0),
-    codigo_sku: this.getNodeParameter('codigo_sku', 0),
-    codigo_ean: this.getNodeParameter('codigo_ean', 0),
-    observacao: this.getNodeParameter('observacao', 0),
-    formato: this.getNodeParameter('formato', 0),
-    estoque: {
-      estoque_disponivel: this.getNodeParameter('estoque_disponivel', 0),
-      valor_venda: this.getNodeParameter('valor_venda', 0),
-      custo_medio: this.getNodeParameter('custo_medio', 0),
-      estoque_minimo: this.getNodeParameter('estoque_minimo', 0),
-      estoque_maximo: this.getNodeParameter('estoque_maximo', 0),
-    },
-    pesos_dimensoes: {
-      altura: this.getNodeParameter('altura', 0),
-      largura: this.getNodeParameter('largura', 0),
-      profundidade: this.getNodeParameter('profundidade', 0),
-    },
   };
+
+  if (additionalFields.codigo_sku) {
+    body.codigo_sku = additionalFields.codigo_sku;
+  }
+
+  if (additionalFields.codigo_ean) {
+    body.codigo = additionalFields.codigo_ean;
+  }
+  if (additionalFields.observacao) {
+    body.observacao = additionalFields.observacao;
+  }
+
+  // Format (optional, default SIMPLES if not set)
+  const formato = additionalFields.formato ?? 'SIMPLES';
+  body.formato = formato;
+
+  const estoque: any = {};
+
+  if (additionalFields.estoque_disponivel !== undefined && additionalFields.estoque_disponivel !== 0) {
+    estoque.estoque_disponivel = additionalFields.estoque_disponivel;
+  }
+  if (additionalFields.valor_venda !== undefined && additionalFields.valor_venda !== 0) {
+    estoque.valor_venda = additionalFields.valor_venda;
+  }
+
+  if (additionalFields.custo_medio !== undefined) {
+    estoque.custo_medio = additionalFields.custo_medio;
+  }
+  if (additionalFields.estoque_minimo !== undefined && additionalFields.estoque_minimo !== 0) {
+    estoque.estoque_minimo = additionalFields.estoque_minimo;
+  }
+  if (additionalFields.estoque_maximo !== undefined && additionalFields.estoque_maximo !== 0) {
+    estoque.estoque_maximo = additionalFields.estoque_maximo;
+  }
+
+  if (Object.keys(estoque).length > 0) {
+    body.estoque = estoque;
+  }
+
+  const pesos_dimensoes: any = {};
+
+  if (additionalFields.altura !== undefined) {
+    pesos_dimensoes.altura = additionalFields.altura;
+  }
+  if (additionalFields.largura !== undefined) {
+    pesos_dimensoes.largura = additionalFields.largura;
+  }
+  if (additionalFields.profundidade !== undefined) {
+    pesos_dimensoes.profundidade = additionalFields.profundidade;
+  }
+
+  if (Object.keys(pesos_dimensoes).length > 0) {
+    body.pesos_dimensoes = pesos_dimensoes;
+  }
 
   const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
     method: 'POST',
