@@ -3,8 +3,8 @@ import {
   INodeExecutionData,
   INodeType,
   INodeTypeDescription,
-  NodeConnectionTypes,
   NodeOperationError,
+  NodeConnectionType,
 } from 'n8n-workflow';
 import { getAllServices, getServiceById, createService } from './servicos';
 import { getProductsByFilter, createProduct, getProductById } from './produtos';
@@ -21,6 +21,7 @@ import { getSalesByFilter, getSaleById, createSale } from './vendas';
 import { createPerson } from './pessoas';
 
 export class ContaAzul implements INodeType {
+
   description: INodeTypeDescription = {
     displayName: 'Conta Azul API',
     name: 'contaAzul',
@@ -31,8 +32,8 @@ export class ContaAzul implements INodeType {
     defaults: {
       name: 'Conta Azul',
     },
-    inputs: [NodeConnectionTypes.Main],
-    outputs: [NodeConnectionTypes.Main],
+    inputs: ['main' as NodeConnectionType],
+    outputs: ['main' as NodeConnectionType],
     credentials: [
       {
         name: 'contaAzulOAuth2Api',
