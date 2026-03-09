@@ -2,11 +2,23 @@ import { IExecuteFunctions } from 'n8n-workflow';
 import { toYYYYMMDD } from './utils';
 
 export async function getFinancialAccounts(this: IExecuteFunctions) {
-  const nome = this.getNodeParameter('nome_conta', 0, '') as string;
-  const tipos = this.getNodeParameter('tipos', 0, []) as string[];
-  const apenas_ativo = this.getNodeParameter('apenas_ativo', 0, true) as boolean;
-  const pagina = this.getNodeParameter('pagina_conta', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_conta', 0, 10) as number;
+  const nome = this.getNodeParameter('financialAccountAdditionalFields.nome_conta', 0, '') as string;
+  const tipos = this.getNodeParameter(
+    'financialAccountAdditionalFields.tipos',
+    0,
+    [],
+  ) as string[];
+  const apenas_ativo = this.getNodeParameter(
+    'financialAccountAdditionalFields.apenas_ativo',
+    0,
+    true,
+  ) as boolean;
+  const pagina = this.getNodeParameter('financialAccountAdditionalFields.pagina_conta', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'financialAccountAdditionalFields.tamanho_pagina_conta',
+    0,
+    10,
+  ) as number;
 
   const qs: any = {
     pagina,
@@ -38,9 +50,13 @@ export async function getFinancialAccounts(this: IExecuteFunctions) {
 }
 
 export async function getRevenuesByFilter(this: IExecuteFunctions) {
-  const busca = this.getNodeParameter('busca_receita', 0, '') as string;
-  const pagina = this.getNodeParameter('pagina_receita', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_receita', 0, 10) as number;
+  const busca = this.getNodeParameter('revenueAdditionalFields.busca_receita', 0, '') as string;
+  const pagina = this.getNodeParameter('revenueAdditionalFields.pagina_receita', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'revenueAdditionalFields.tamanho_pagina_receita',
+    0,
+    10,
+  ) as number;
   const data_vencimento_de_raw = this.getNodeParameter('data_vencimento_de', 0) as string;
   const data_vencimento_ate_raw = this.getNodeParameter('data_vencimento_ate', 0) as string;
 
@@ -74,9 +90,13 @@ export async function getRevenuesByFilter(this: IExecuteFunctions) {
 }
 
 export async function getExpensesByFilter(this: IExecuteFunctions) {
-  const busca = this.getNodeParameter('busca_despesa', 0, '') as string;
-  const pagina = this.getNodeParameter('pagina_despesa', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_despesa', 0, 10) as number;
+  const busca = this.getNodeParameter('expenseAdditionalFields.busca_despesa', 0, '') as string;
+  const pagina = this.getNodeParameter('expenseAdditionalFields.pagina_despesa', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'expenseAdditionalFields.tamanho_pagina_despesa',
+    0,
+    10,
+  ) as number;
   const data_vencimento_de_raw = this.getNodeParameter('data_vencimento_de_despesa', 0) as string;
   const data_vencimento_ate_raw = this.getNodeParameter('data_vencimento_ate_despesa', 0) as string;
 

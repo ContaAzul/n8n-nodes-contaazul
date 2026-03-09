@@ -1,5 +1,12 @@
-import { IExecuteFunctions, INodeType, INodeTypeDescription, NodeConnectionType, NodeOperationError } from 'n8n-workflow';
-import { getAllServices, getServiceById } from './servicos';
+import {
+  IExecuteFunctions,
+  INodeExecutionData,
+  INodeType,
+  INodeTypeDescription,
+  NodeOperationError,
+  NodeConnectionType,
+} from 'n8n-workflow';
+import { getAllServices, getServiceById, createService } from './servicos';
 import { getProductsByFilter, createProduct, getProductById } from './produtos';
 import { getCategories } from './categorias';
 import { getCostCenters } from './centroCusto';
@@ -14,6 +21,7 @@ import { getSalesByFilter, getSaleById, createSale } from './vendas';
 import { createPerson } from './pessoas';
 
 export class ContaAzul implements INodeType {
+
   description: INodeTypeDescription = {
     displayName: 'Conta Azul API',
     name: 'contaAzul',
@@ -42,6 +50,7 @@ export class ContaAzul implements INodeType {
           { name: 'Create Person', value: 'createPerson' },
           { name: 'Create Product', value: 'createProduct' },
           { name: 'Create Sale', value: 'createSale' },
+          { name: 'Create Service', value: 'createService' },
           { name: 'Search Categories', value: 'getCategories' },
           { name: 'Search Cost Centers', value: 'getCostCenters' },
           { name: 'Search Expenses By Filter', value: 'getExpensesByFilter' },
@@ -86,76 +95,87 @@ export class ContaAzul implements INodeType {
         description: 'Service ID to search for',
       },
       {
-        displayName: 'Text Search',
-        name: 'busca_textual',
+        displayName: 'Description',
+        name: 'descricao',
         type: 'string',
+        required: true,
         displayOptions: {
           show: {
-            operation: ['getAllServices'],
+            operation: ['createService'],
           },
         },
         default: '',
-        description: 'Text search by name, code or service description',
+        description: 'Service description',
       },
       {
-        displayName: 'Page',
-        name: 'pagina',
-        type: 'number',
+        displayName: 'Additional Fields (Service)',
+        name: 'serviceAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getAllServices'],
           },
         },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size',
-        name: 'tamanho_pagina',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getAllServices'],
+        options: [
+          {
+            displayName: 'Text Search',
+            name: 'busca_textual',
+            type: 'string',
+            default: '',
+            description: 'Text search by name, code or service description',
           },
-        },
-        default: 10,
-        description: 'Number of items per page',
-      },
-      {
-        displayName: 'Text Search (Sale)',
-        name: 'busca_textual_venda',
-        type: 'string',
-        displayOptions: {
-          show: {
-            operation: ['getSalesByFilter'],
+          {
+            displayName: 'Page',
+            name: 'pagina',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
           },
-        },
-        default: '',
-        description: 'Text search by customer name, sale number or customer email',
-      },
-      {
-        displayName: 'Page (Sale)',
-        name: 'pagina_venda',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getSalesByFilter'],
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
           },
-        },
-        default: 1,
-        description: 'Page number',
+        ],
       },
       {
-        displayName: 'Page Size (Sale)',
-        name: 'tamanho_pagina_venda',
-        type: 'number',
+        displayName: 'Additional Fields (Sale)',
+        name: 'saleAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getSalesByFilter'],
           },
         },
-        default: 10,
-        description: 'Number of items per page',
+        options: [
+          {
+            displayName: 'Text Search (Sale)',
+            name: 'busca_textual_venda',
+            type: 'string',
+            default: '',
+            description: 'Text search by customer name, sale number or customer email',
+          },
+          {
+            displayName: 'Page',
+            name: 'pagina_venda',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
+          },
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_venda',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
+        ],
       },
       {
         displayName: 'Sale ID',
@@ -171,40 +191,91 @@ export class ContaAzul implements INodeType {
         description: 'Sale ID (UUID) to search for',
       },
       {
-        displayName: 'Search Term',
-        name: 'termo_busca',
-        type: 'string',
+        displayName: 'Additional Fields (Person Search)',
+        name: 'personSearchAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getPersonsByFilter'],
           },
         },
-        default: '',
-        description: 'Search by document, customer name or company name',
+        options: [
+          {
+            displayName: 'Search Term',
+            name: 'termo_busca',
+            type: 'string',
+            default: '',
+            description: 'Search by document, customer name or company name',
+          },
+          {
+            displayName: 'Page',
+            name: 'pagina_pessoa',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
+          },
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_pessoa',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
+        ],
       },
       {
-        displayName: 'Page (Person)',
-        name: 'pagina_pessoa',
-        type: 'number',
+        displayName: 'Additional Fields (Service Creation)',
+        name: 'serviceCreateAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
-            operation: ['getPersonsByFilter'],
+            operation: ['createService'],
           },
         },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size (Person)',
-        name: 'tamanho_pagina_pessoa',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getPersonsByFilter'],
+        options: [
+          {
+            displayName: 'Code',
+            name: 'codigo',
+            type: 'string',
+            default: '',
+            description: 'Service code (e.g., SERV001)',
           },
-        },
-        default: 10,
-        description: 'Number of items per page',
+          {
+            displayName: 'Cost',
+            name: 'custo',
+            type: 'number',
+            default: 0,
+            description: 'Service cost',
+          },
+          {
+            displayName: 'Price',
+            name: 'preco',
+            type: 'number',
+            default: 0,
+            description: 'Service price',
+          },
+          {
+            displayName: 'Service Type',
+            name: 'tipo_servico',
+            type: 'string',
+            default: 'PRESTADO',
+            description: 'Service type (for example: PRESTADO)',
+          },
+          {
+            displayName: 'Status',
+            name: 'status',
+            type: 'options',
+            options: [
+              { name: 'Active', value: 'ATIVO' },
+              { name: 'Inactive', value: 'INATIVO' },
+            ],
+            default: 'ATIVO',
+          },
+        ],
       },
       {
         displayName: 'Person ID',
@@ -220,299 +291,259 @@ export class ContaAzul implements INodeType {
         description: 'Person ID (UUID) to search for summary',
       },
       {
-        displayName: 'Search',
-        name: 'busca_centro',
-        type: 'string',
+        displayName: 'Additional Fields (Cost Center)',
+        name: 'costCenterAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getCostCenters'],
           },
         },
-        default: '',
-        description: 'Search by name or cost center code',
-      },
-      {
-        displayName: 'Quick Filter',
-        name: 'filtro_rapido',
-        type: 'options',
         options: [
-          { name: 'Ativo', value: 'ATIVO' },
-          { name: 'Inativo', value: 'INATIVO' },
-          { name: 'Todos', value: 'TODOS' },
+          {
+            displayName: 'Search',
+            name: 'busca_centro',
+            type: 'string',
+            default: '',
+            description: 'Search by name or cost center code',
+          },
+          {
+            displayName: 'Quick Filter',
+            name: 'filtro_rapido',
+            type: 'options',
+            options: [
+              { name: 'Ativo', value: 'ATIVO' },
+              { name: 'Inativo', value: 'INATIVO' },
+              { name: 'Todos', value: 'TODOS' },
+            ],
+            default: 'ATIVO',
+            description: 'Filter cost centers by status',
+          },
+          {
+            displayName: 'Page',
+            name: 'pagina_centro',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
+          },
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_centro',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
         ],
-        displayOptions: {
-          show: {
-            operation: ['getCostCenters'],
-          },
-        },
-        default: 'ATIVO',
-        description: 'Filter cost centers by status',
       },
       {
-        displayName: 'Page',
-        name: 'pagina_centro',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getCostCenters'],
-          },
-        },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size',
-        name: 'tamanho_pagina_centro',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getCostCenters'],
-          },
-        },
-        default: 10,
-        description: 'Number of items per page',
-      },
-      {
-        displayName: 'Search (Category)',
-        name: 'busca_categoria',
-        type: 'string',
+        displayName: 'Additional Fields (Category)',
+        name: 'categoryAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getCategories'],
           },
         },
-        default: '',
-        description: 'Search by name or category code',
-      },
-      {
-        displayName: 'Type',
-        name: 'tipo_categoria',
-        type: 'options',
         options: [
-          { name: 'Receita', value: 'RECEITA' },
-          { name: 'Despesa', value: 'DESPESA' },
+          {
+            displayName: 'Search (Category)',
+            name: 'busca_categoria',
+            type: 'string',
+            default: '',
+            description: 'Search by name or category code',
+          },
+          {
+            displayName: 'Type',
+            name: 'tipo_categoria',
+            type: 'options',
+            options: [
+              { name: 'Receita', value: 'RECEITA' },
+              { name: 'Despesa', value: 'DESPESA' },
+            ],
+            default: 'RECEITA',
+            description: 'Category type',
+          },
+          {
+            displayName: 'Page',
+            name: 'pagina_categoria',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
+          },
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_categoria',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
         ],
-        displayOptions: {
-          show: {
-            operation: ['getCategories'],
-          },
-        },
-        default: 'RECEITA',
-        description: 'Category type',
       },
       {
-        displayName: 'Page (Category)',
-        name: 'pagina_categoria',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getCategories'],
-          },
-        },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size (Category)',
-        name: 'tamanho_pagina_categoria',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getCategories'],
-          },
-        },
-        default: 10,
-        description: 'Number of items per page',
-      },
-      {
-        displayName: 'Financial Account Name',
-        name: 'nome_conta',
-        type: 'string',
+        displayName: 'Additional Fields (Financial Account)',
+        name: 'financialAccountAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getFinancialAccounts'],
           },
         },
-        default: '',
-      },
-      {
-        displayName: 'Financial Account Types',
-        name: 'tipos',
-        type: 'multiOptions',
         options: [
-          { name: 'Aplicação', value: 'APLICACAO' },
-          { name: 'Caixinha', value: 'CAIXINHA' },
-          { name: 'Cartão De Crédito', value: 'CARTAO_CREDITO' },
-          { name: 'Cobranças Conta Azul', value: 'COBRANCAS_CONTA_AZUL' },
-          { name: 'Conta Corrente', value: 'CONTA_CORRENTE' },
-          { name: 'Investimento', value: 'INVESTIMENTO' },
-          { name: 'Meios De Recebimento', value: 'MEIOS_RECEBIMENTO' },
-          { name: 'Outros', value: 'OUTROS' },
-          { name: 'Poupança', value: 'POUPANCA' },
-          { name: 'Receba Fácil Cartão', value: 'RECEBA_FACIL_CARTAO' },
+          {
+            displayName: 'Financial Account Name',
+            name: 'nome_conta',
+            type: 'string',
+            default: '',
+          },
+          {
+            displayName: 'Financial Account Types',
+            name: 'tipos',
+            type: 'multiOptions',
+            options: [
+              { name: 'Aplicação', value: 'APLICACAO' },
+              { name: 'Caixinha', value: 'CAIXINHA' },
+              { name: 'Cartão De Crédito', value: 'CARTAO_CREDITO' },
+              { name: 'Cobranças Conta Azul', value: 'COBRANCAS_CONTA_AZUL' },
+              { name: 'Conta Corrente', value: 'CONTA_CORRENTE' },
+              { name: 'Investimento', value: 'INVESTIMENTO' },
+              { name: 'Meios De Recebimento', value: 'MEIOS_RECEBIMENTO' },
+              { name: 'Outros', value: 'OUTROS' },
+              { name: 'Poupança', value: 'POUPANCA' },
+              { name: 'Receba Fácil Cartão', value: 'RECEBA_FACIL_CARTAO' },
+            ],
+            default: [],
+          },
+          {
+            displayName: 'Only Active',
+            name: 'apenas_ativo',
+            type: 'boolean',
+            default: true,
+            description: 'Whether to filter only active accounts',
+          },
+          {
+            displayName: 'Page',
+            name: 'pagina_conta',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
+          },
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_conta',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
         ],
-        displayOptions: {
-          show: {
-            operation: ['getFinancialAccounts'],
-          },
-        },
-        default: [],
       },
       {
-        displayName: 'Only Active',
-        name: 'apenas_ativo',
-        type: 'boolean',
-        displayOptions: {
-          show: {
-            operation: ['getFinancialAccounts'],
-          },
-        },
-        default: true,
-        description: 'Whether to filter only active accounts',
-      },
-      {
-        displayName: 'Page',
-        name: 'pagina_conta',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getFinancialAccounts'],
-          },
-        },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size',
-        name: 'tamanho_pagina_conta',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getFinancialAccounts'],
-          },
-        },
-        default: 10,
-        description: 'Number of items per page',
-      },
-      {
-        displayName: 'Search (Product)',
-        name: 'busca_produto',
-        type: 'string',
+        displayName: 'Additional Fields (Product)',
+        name: 'productAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getProductsByFilter'],
           },
         },
-        default: '',
-        description: 'Search products by name or code',
-      },
-      {
-        displayName: 'Status',
-        name: 'status_produto',
-        type: 'options',
         options: [
-          { name: 'Ativo', value: 'ATIVO' },
-          { name: 'Inativo', value: 'INATIVO' },
+          {
+            displayName: 'Page',
+            name: 'pagina_produto',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
+          },
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_produto',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
+          {
+            displayName: 'Search (Product)',
+            name: 'busca_produto',
+            type: 'string',
+            default: '',
+            description: 'Search products by name or code',
+          },
+          {
+            displayName: 'Sort Direction',
+            name: 'direcao_ordenacao',
+            type: 'options',
+            options: [
+              { name: 'Ascendente', value: 'ASC' },
+              { name: 'Descendente', value: 'DESC' },
+            ],
+            default: 'ASC',
+          },
+          {
+            displayName: 'Sort Field',
+            name: 'campo_ordenacao',
+            type: 'options',
+            options: [
+              { name: 'Nome', value: 'NOME' },
+              { name: 'Código', value: 'CODIGO' },
+              { name: 'Valor De Venda', value: 'VALOR_VENDA' },
+            ],
+            default: 'NOME',
+            description: 'Field to order results',
+          },
+          {
+            displayName: 'Status',
+            name: 'status_produto',
+            type: 'options',
+            options: [
+              { name: 'Ativo', value: 'ATIVO' },
+              { name: 'Inativo', value: 'INATIVO' },
+            ],
+            default: 'ATIVO',
+            description: 'Product status',
+          },
         ],
-        displayOptions: {
-          show: {
-            operation: ['getProductsByFilter'],
-          },
-        },
-        default: 'ATIVO',
-        description: 'Product status',
       },
       {
-        displayName: 'Sort Field',
-        name: 'campo_ordenacao',
-        type: 'options',
-        options: [
-          { name: 'Nome', value: 'NOME' },
-          { name: 'Código', value: 'CODIGO' },
-          { name: 'Valor De Venda', value: 'VALOR_VENDA' },
-        ],
-        displayOptions: {
-          show: {
-            operation: ['getProductsByFilter'],
-          },
-        },
-        default: 'NOME',
-        description: 'Field to order results',
-      },
-      {
-        displayName: 'Sort Direction',
-        name: 'direcao_ordenacao',
-        type: 'options',
-        options: [
-          { name: 'Ascendente', value: 'ASC' },
-          { name: 'Descendente', value: 'DESC' },
-        ],
-        displayOptions: {
-          show: {
-            operation: ['getProductsByFilter'],
-          },
-        },
-        default: 'ASC',
-      },
-      {
-        displayName: 'Page (Product)',
-        name: 'pagina_produto',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getProductsByFilter'],
-          },
-        },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size (Product)',
-        name: 'tamanho_pagina_produto',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getProductsByFilter'],
-          },
-        },
-        default: 10,
-        description: 'Number of items per page',
-      },
-      {
-        displayName: 'Search (Revenue)',
-        name: 'busca_receita',
-        type: 'string',
+        displayName: 'Additional Fields (Revenue)',
+        name: 'revenueAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getRevenuesByFilter'],
           },
         },
-        default: '',
-        description: 'Search revenues by name, number, etc',
-      },
-      {
-        displayName: 'Page (Revenue)',
-        name: 'pagina_receita',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getRevenuesByFilter'],
+        options: [
+          {
+            displayName: 'Search (Revenue)',
+            name: 'busca_receita',
+            type: 'string',
+            default: '',
+            description: 'Search revenues by name, number, etc',
           },
-        },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size (Revenue)',
-        name: 'tamanho_pagina_receita',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getRevenuesByFilter'],
+          {
+            displayName: 'Page',
+            name: 'pagina_receita',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
           },
-        },
-        default: 10,
-        description: 'Number of items per page',
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_receita',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
+        ],
       },
       {
         displayName: 'Due Date (From)',
@@ -541,40 +572,39 @@ export class ContaAzul implements INodeType {
         description: 'Final due date (format YYYY-MM-DD, required)',
       },
       {
-        displayName: 'Search (Expense)',
-        name: 'busca_despesa',
-        type: 'string',
+        displayName: 'Additional Fields (Expense)',
+        name: 'expenseAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['getExpensesByFilter'],
           },
         },
-        default: '',
-        description: 'Search expenses by name, number, etc',
-      },
-      {
-        displayName: 'Page (Expense)',
-        name: 'pagina_despesa',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getExpensesByFilter'],
+        options: [
+          {
+            displayName: 'Search (Expense)',
+            name: 'busca_despesa',
+            type: 'string',
+            default: '',
+            description: 'Search expenses by name, number, etc',
           },
-        },
-        default: 1,
-        description: 'Page number',
-      },
-      {
-        displayName: 'Page Size (Expense)',
-        name: 'tamanho_pagina_despesa',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['getExpensesByFilter'],
+          {
+            displayName: 'Page',
+            name: 'pagina_despesa',
+            type: 'number',
+            default: 1,
+            description: 'Page number',
           },
-        },
-        default: 10,
-        description: 'Number of items per page',
+          {
+            displayName: 'Page Size',
+            name: 'tamanho_pagina_despesa',
+            type: 'number',
+            default: 10,
+            description: 'Number of items per page',
+          },
+        ],
       },
       {
         displayName: 'Due Date (From)',
@@ -628,151 +658,103 @@ export class ContaAzul implements INodeType {
         default: '',
       },
       {
-        displayName: 'SKU',
-        name: 'codigo_sku',
-        type: 'string',
-        required: true,
+        displayName: 'Additional Fields (Product Creation)',
+        name: 'productCreateAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
         displayOptions: {
           show: {
             operation: ['createProduct'],
           },
         },
-        default: '',
-        description: 'Product SKU code',
-      },
-      {
-        displayName: 'EAN',
-        name: 'codigo_ean',
-        type: 'string',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+        options: [
+          {
+            displayName: 'Average Cost',
+            name: 'custo_medio',
+            type: 'number',
+            default: 0,
+            description: 'Product average cost',
           },
-        },
-        default: '',
-        description: 'Product EAN code',
-      },
-      {
-        displayName: 'Observation',
-        name: 'observacao',
-        type: 'string',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Depth (Cm)',
+            name: 'profundidade',
+            type: 'number',
+            default: 0,
+            description: 'Product depth in centimeters',
           },
-        },
-        default: '',
-        description: 'Product observation',
-      },
-      {
-        displayName: 'Stock Quantity',
-        name: 'estoque_disponivel',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'EAN',
+            name: 'codigo_ean',
+            type: 'string',
+            default: '',
+            description: 'Product EAN code',
           },
-        },
-        default: 0,
-        description: 'Total stock quantity',
-      },
-      {
-        displayName: 'Sale Value',
-        name: 'valor_venda',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Format',
+            name: 'formato',
+            type: 'options',
+            options: [{ name: 'Simples', value: 'SIMPLES' }],
+            default: 'SIMPLES',
+            description: 'Product format',
           },
-        },
-        default: 0,
-        description: 'Product sale value',
-      },
-      {
-        displayName: 'Average Cost',
-        name: 'custo_medio',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Height (Cm)',
+            name: 'altura',
+            type: 'number',
+            default: 0,
+            description: 'Product height in centimeters',
           },
-        },
-        default: 0,
-        description: 'Product average cost',
-      },
-      {
-        displayName: 'Minimum Stock',
-        name: 'estoque_minimo',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Maximum Stock',
+            name: 'estoque_maximo',
+            type: 'number',
+            default: 0,
+            description: 'Product maximum stock',
           },
-        },
-        default: 0,
-        description: 'Product minimum stock',
-      },
-      {
-        displayName: 'Maximum Stock',
-        name: 'estoque_maximo',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Minimum Stock',
+            name: 'estoque_minimo',
+            type: 'number',
+            default: 0,
+            description: 'Product minimum stock',
           },
-        },
-        default: 0,
-        description: 'Product maximum stock',
-      },
-      {
-        displayName: 'Height (Cm)',
-        name: 'altura',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Observation',
+            name: 'observacao',
+            type: 'string',
+            default: '',
+            description: 'Product observation',
           },
-        },
-        default: 0,
-        description: 'Product height in centimeters',
-      },
-      {
-        displayName: 'Width (Cm)',
-        name: 'largura',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Sale Value',
+            name: 'valor_venda',
+            type: 'number',
+            default: 0,
+            description: 'Product sale value',
           },
-        },
-        default: 0,
-        description: 'Product width in centimeters',
-      },
-      {
-        displayName: 'Depth (Cm)',
-        name: 'profundidade',
-        type: 'number',
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'SKU',
+            name: 'codigo_sku',
+            type: 'string',
+            default: '',
+            description: 'Product SKU code',
           },
-        },
-        default: 0,
-        description: 'Product depth in centimeters',
-      },
-      {
-        displayName: 'Format',
-        name: 'formato',
-        type: 'options',
-        options: [{ name: 'Simples', value: 'SIMPLES' }],
-        required: true,
-        displayOptions: {
-          show: {
-            operation: ['createProduct'],
+          {
+            displayName: 'Stock Quantity',
+            name: 'estoque_disponivel',
+            type: 'number',
+            default: 0,
+            description: 'Total stock quantity',
           },
-        },
-        default: 'SIMPLES',
-        description: 'Product format (only simple)',
+          {
+            displayName: 'Width (Cm)',
+            name: 'largura',
+            type: 'number',
+            default: 0,
+            description: 'Product width in centimeters',
+          },
+        ],
       },
       {
         displayName: 'Person Type',
@@ -792,21 +774,6 @@ export class ContaAzul implements INodeType {
         name: 'nome',
         type: 'string',
         required: true,
-        displayOptions: { show: { operation: ['createPerson'] } },
-        default: '',
-      },
-      {
-        displayName: 'Email',
-        name: 'email',
-        type: 'string',
-								placeholder: 'name@email.com',
-        displayOptions: { show: { operation: ['createPerson'] } },
-        default: '',
-      },
-      {
-        displayName: 'Phone',
-        name: 'telefone',
-        type: 'string',
         displayOptions: { show: { operation: ['createPerson'] } },
         default: '',
       },
@@ -848,13 +815,6 @@ export class ContaAzul implements INodeType {
         default: '',
       },
       {
-        displayName: 'Complement',
-        name: 'complemento',
-        type: 'string',
-        displayOptions: { show: { operation: ['createPerson'] } },
-        default: '',
-      },
-      {
         displayName: 'Neighborhood',
         name: 'bairro',
         type: 'string',
@@ -878,6 +838,39 @@ export class ContaAzul implements INodeType {
         displayOptions: { show: { operation: ['createPerson'] } },
         default: '',
         description: 'State of the address Example: SP, RJ, MG',
+      },
+      {
+        displayName: 'Additional Fields (Person)',
+        name: 'personAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
+        displayOptions: {
+          show: {
+            operation: ['createPerson'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Email',
+            name: 'email',
+            type: 'string',
+            placeholder: 'name@example.com',
+            default: '',
+          },
+          {
+            displayName: 'Phone',
+            name: 'telefone',
+            type: 'string',
+            default: '',
+          },
+          {
+            displayName: 'Complement',
+            name: 'complemento',
+            type: 'string',
+            default: '',
+          },
+        ],
       },
       {
         displayName: 'CPF',
@@ -1028,7 +1021,6 @@ export class ContaAzul implements INodeType {
         options: [
           { name: 'Em Andamento', value: 'EM_ANDAMENTO' },
           { name: 'Aprovado', value: 'APROVADO' },
-          { name: 'Faturado', value: 'FATURADO' },
         ],
         required: true,
         displayOptions: { show: { operation: ['createSale'] } },
@@ -1036,19 +1028,31 @@ export class ContaAzul implements INodeType {
         description: 'Sale status',
       },
       {
-        displayName: 'Observations',
-        name: 'observacoes',
-        type: 'string',
-        displayOptions: { show: { operation: ['createSale'] } },
-        default: '',
-        description: 'Sale observations',
-      },
-      {
-        displayName: 'Payment Observations',
-        name: 'observacoes_pagamento',
-        type: 'string',
-        displayOptions: { show: { operation: ['createSale'] } },
-        default: '',
+        displayName: 'Additional Fields (Sale Creation)',
+        name: 'saleCreateAdditionalFields',
+        type: 'collection',
+        placeholder: 'Add field',
+        default: {},
+        displayOptions: {
+          show: {
+            operation: ['createSale'],
+          },
+        },
+        options: [
+          {
+            displayName: 'Observations',
+            name: 'observacoes',
+            type: 'string',
+            default: '',
+            description: 'Sale observations',
+          },
+          {
+            displayName: 'Payment Observations',
+            name: 'observacoes_pagamento',
+            type: 'string',
+            default: '',
+          },
+        ],
       },
       {
         displayName: 'Items',
@@ -1102,76 +1106,78 @@ export class ContaAzul implements INodeType {
   };
 
   async execute(this: IExecuteFunctions) {
-    const operation = this.getNodeParameter('operation', 0) as string;
+    const items = this.getInputData();
+    const returnData: INodeExecutionData[] = [];
 
-    if (operation === 'getAllServices') {
-      return [await getAllServices.call(this)];
+    for (let i = 0; i < items.length; i++) {
+      const operation = this.getNodeParameter('operation', i) as string;
+
+      try {
+        let result: INodeExecutionData[] = [];
+
+        if (operation === 'getAllServices') {
+          result = (await getAllServices.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getServiceById') {
+          result = (await getServiceById.call(this)) as INodeExecutionData[];
+        } else if (operation === 'createService') {
+          result = (await createService.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getSalesByFilter') {
+          result = (await getSalesByFilter.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getSaleById') {
+          result = (await getSaleById.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getPersonsByFilter') {
+          result = (await getPersonsByFilter.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getPersonById') {
+          result = (await getPersonById.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getCostCenters') {
+          result = (await getCostCenters.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getCategories') {
+          result = (await getCategories.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getFinancialAccounts') {
+          result = (await getFinancialAccounts.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getProductById') {
+          result = (await getProductById.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getProductsByFilter') {
+          result = (await getProductsByFilter.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getRevenuesByFilter') {
+          result = (await getRevenuesByFilter.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getExpensesByFilter') {
+          result = (await getExpensesByFilter.call(this)) as INodeExecutionData[];
+        } else if (operation === 'getInstallmentById') {
+          result = (await getInstallmentById.call(this)) as INodeExecutionData[];
+        } else if (operation === 'createProduct') {
+          result = (await createProduct.call(this)) as INodeExecutionData[];
+        } else if (operation === 'createPerson') {
+          result = (await createPerson.call(this)) as INodeExecutionData[];
+        } else if (operation === 'createSale') {
+          result = (await createSale.call(this)) as INodeExecutionData[];
+        } else {
+          throw new NodeOperationError(this.getNode(), 'Operation not supported');
+        }
+
+        for (const outputItem of result) {
+          outputItem.pairedItem = { item: i };
+          returnData.push(outputItem);
+        }
+      } catch (error) {
+        if (this.continueOnFail()) {
+          returnData.push({
+            json: {
+              error: (error as Error).message,
+            },
+            pairedItem: { item: i },
+          });
+          continue;
+        }
+
+        if (error instanceof NodeOperationError) {
+          throw error;
+        }
+
+        throw new NodeOperationError(this.getNode(), error as Error);
+      }
     }
 
-    if (operation === 'getServiceById') {
-      return [await getServiceById.call(this)];
-    }
-
-    if (operation === 'getSalesByFilter') {
-      return [await getSalesByFilter.call(this)];
-    }
-
-    if (operation === 'getSaleById') {
-      return [await getSaleById.call(this)];
-    }
-
-    if (operation === 'getPersonsByFilter') {
-      return [await getPersonsByFilter.call(this)];
-    }
-
-    if (operation === 'getPersonById') {
-      return [await getPersonById.call(this)];
-    }
-
-    if (operation === 'getCostCenters') {
-      return [await getCostCenters.call(this)];
-    }
-
-    if (operation === 'getCategories') {
-      return [await getCategories.call(this)];
-    }
-
-    if (operation === 'getFinancialAccounts') {
-      return [await getFinancialAccounts.call(this)];
-    }
-
-    if (operation === 'getProductById') {
-      return [await getProductById.call(this)];
-    }
-
-    if (operation === 'getProductsByFilter') {
-      return [await getProductsByFilter.call(this)];
-    }
-
-    if (operation === 'getRevenuesByFilter') {
-      return [await getRevenuesByFilter.call(this)];
-    }
-
-    if (operation === 'getExpensesByFilter') {
-      return [await getExpensesByFilter.call(this)];
-    }
-
-    if (operation === 'getInstallmentById') {
-      return [await getInstallmentById.call(this)];
-    }
-
-    if (operation === 'createProduct') {
-      return [await createProduct.call(this)];
-    }
-
-    if (operation === 'createPerson') {
-      return [await createPerson.call(this)];
-    }
-
-    if (operation === 'createSale') {
-      return [await createSale.call(this)];
-    }
-
-    throw new NodeOperationError(this.getNode(), 'Operation not supported');
+    return [returnData];
   }
 }

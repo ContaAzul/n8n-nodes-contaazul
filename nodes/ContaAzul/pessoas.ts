@@ -1,9 +1,13 @@
 import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 
 export async function getPersonsByFilter(this: IExecuteFunctions) {
-  const termo_busca = this.getNodeParameter('termo_busca', 0, '') as string;
-  const pagina = this.getNodeParameter('pagina_pessoa', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_pessoa', 0, 10) as number;
+  const termo_busca = this.getNodeParameter('personSearchAdditionalFields.termo_busca', 0, '') as string;
+  const pagina = this.getNodeParameter('personSearchAdditionalFields.pagina_pessoa', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'personSearchAdditionalFields.tamanho_pagina_pessoa',
+    0,
+    10,
+  ) as number;
 
   const qs: any = {
     pagina,
@@ -63,15 +67,15 @@ export async function createPerson(this: IExecuteFunctions) {
   const body: any = {
     tipo_pessoa: tipoPessoa,
     nome: this.getNodeParameter('nome', 0),
-    email: this.getNodeParameter('email', 0),
-    telefone: this.getNodeParameter('telefone', 0),
+    email: this.getNodeParameter('personAdditionalFields.email', 0, ''),
+    telefone: this.getNodeParameter('personAdditionalFields.telefone', 0, ''),
 
     enderecos: [
       {
         cep: this.getNodeParameter('cep', 0),
         logradouro: this.getNodeParameter('logradouro', 0),
         numero: this.getNodeParameter('numero', 0),
-        complemento: this.getNodeParameter('complemento', 0),
+        complemento: this.getNodeParameter('personAdditionalFields.complemento', 0, ''),
         bairro: this.getNodeParameter('bairro', 0),
         cidade: this.getNodeParameter('cidade', 0),
         estado: this.getNodeParameter('estado', 0),

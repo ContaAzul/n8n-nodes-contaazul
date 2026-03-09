@@ -1,9 +1,13 @@
 import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 
 export async function getSalesByFilter(this: IExecuteFunctions) {
-  const busca_textual = this.getNodeParameter('busca_textual_venda', 0, '') as string;
-  const pagina = this.getNodeParameter('pagina_venda', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter('tamanho_pagina_venda', 0, 10) as number;
+  const busca_textual = this.getNodeParameter('saleAdditionalFields.busca_textual_venda', 0, '') as string;
+  const pagina = this.getNodeParameter('saleAdditionalFields.pagina_venda', 0, 1) as number;
+  const tamanho_pagina = this.getNodeParameter(
+    'saleAdditionalFields.tamanho_pagina_venda',
+    0,
+    10,
+  ) as number;
 
   const qs: any = {
     pagina,
@@ -97,9 +101,13 @@ export async function createSale(this: IExecuteFunctions) {
     condicao_pagamento,
   };
 
-  const observacoes = this.getNodeParameter('observacoes', 0, '');
+  const observacoes = this.getNodeParameter('saleCreateAdditionalFields.observacoes', 0, '');
   if (observacoes) body.observacoes = observacoes;
-  const observacoes_pagamento = this.getNodeParameter('observacoes_pagamento', 0, '');
+  const observacoes_pagamento = this.getNodeParameter(
+    'saleCreateAdditionalFields.observacoes_pagamento',
+    0,
+    '',
+  );
   if (observacoes_pagamento) body.observacoes_pagamento = observacoes_pagamento;
 
   const response = await this.helpers.httpRequestWithAuthentication.call(this, 'contaAzulOAuth2Api', {
