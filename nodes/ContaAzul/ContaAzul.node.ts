@@ -1021,7 +1021,6 @@ export class ContaAzul implements INodeType {
         options: [
           { name: 'Em Andamento', value: 'EM_ANDAMENTO' },
           { name: 'Aprovado', value: 'APROVADO' },
-          { name: 'Faturado', value: 'FATURADO' },
         ],
         required: true,
         displayOptions: { show: { operation: ['createSale'] } },
