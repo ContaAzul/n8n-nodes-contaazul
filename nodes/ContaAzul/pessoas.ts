@@ -3,11 +3,7 @@ import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 export async function getPersonsByFilter(this: IExecuteFunctions) {
   const termo_busca = this.getNodeParameter('personSearchAdditionalFields.termo_busca', 0, '') as string;
   const pagina = this.getNodeParameter('personSearchAdditionalFields.pagina_pessoa', 0, 1) as number;
-  const tamanho_pagina = this.getNodeParameter(
-    'personSearchAdditionalFields.tamanho_pagina_pessoa',
-    0,
-    10,
-  ) as number;
+  const tamanho_pagina = this.getNodeParameter('personSearchAdditionalFields.tamanho_pagina_pessoa', 0, 10) as number;
 
   const qs: any = {
     pagina,
@@ -56,20 +52,16 @@ export async function createPerson(this: IExecuteFunctions) {
   const tipoPerfilParam = this.getNodeParameter('tipo_perfil', 0);
   const perfisArray = Array.isArray(tipoPerfilParam) ? tipoPerfilParam : [tipoPerfilParam];
   const estado = this.getNodeParameter('estado', 0) as string;
+  const email = this.getNodeParameter('personAdditionalFields.email', 0, '') as string;
+  const telefone = this.getNodeParameter('personAdditionalFields.telefone', 0, '') as string;
 
   if (estado.length !== 2 || !/^[A-Z]{2}$/.test(estado)) {
-    throw new NodeOperationError(
-      this.getNode(),
-      'State must be exactly 2 uppercase letters (example: SC)'
-    );
+    throw new NodeOperationError(this.getNode(), 'State must be exactly 2 uppercase letters (example: SC)');
   }
-  
+
   const body: any = {
     tipo_pessoa: tipoPessoa,
     nome: this.getNodeParameter('nome', 0),
-    email: this.getNodeParameter('personAdditionalFields.email', 0, ''),
-    telefone: this.getNodeParameter('personAdditionalFields.telefone', 0, ''),
-
     enderecos: [
       {
         cep: this.getNodeParameter('cep', 0),
@@ -82,13 +74,16 @@ export async function createPerson(this: IExecuteFunctions) {
         pais: this.getNodeParameter('pais', 0),
       },
     ],
-    perfis: perfisArray.map((perfil) => ({ tipo_perfil: perfil })),
+    perfis: perfisArray.map(perfil => ({ tipo_perfil: perfil })),
   };
 
-  if (tipoPessoa === 'FISICA') {
+  if (email) body.email = email;
+  if (telefone) body.telefone_celular = telefone;
+
+  if (tipoPessoa === 'Física') {
     body.cpf = this.getNodeParameter('cpf', 0, null);
   }
-  if (tipoPessoa === 'JURIDICA') {
+  if (tipoPessoa === 'Jurídica') {
     body.cnpj = this.getNodeParameter('cnpj', 0, null);
   }
 
