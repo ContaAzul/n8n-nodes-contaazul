@@ -29,13 +29,13 @@ export class ContaAzulOAuth2Api implements ICredentialType {
       displayName: 'Auth URL',
       name: 'authUrl',
       type: 'string',
-      default: 'https://auth.contaazul.com/oauth2/authorize',
+      default: 'https://api-v2.contaazul.com/oauth/authorize',
     },
     {
-      displayName: 'Token URL',
-      name: 'tokenUrl',
+      displayName: 'Access Token URL',
+      name: 'accessTokenUrl',
       type: 'string',
-      default: 'https://auth.contaazul.com/oauth2/token',
+      default: 'https://api-v2.contaazul.com/oauth/token',
     },
   ];
 }

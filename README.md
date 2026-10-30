@@ -72,9 +72,11 @@ To use this node, you need a Conta Azul account and configure OAuth2 credentials
    - **Client ID**: Your Conta Azul Client ID
    - **Client Secret**: Your Conta Azul Client Secret
    - **Scope**: `openid profile aws.cognito.signin.user.admin` (default)
-   - **Auth URL**: `https://auth.contaazul.com/oauth2/authorize` (default)
-   - **Token URL**: `https://auth.contaazul.com/oauth2/token` (default)
+   - **Auth URL**: `https://api-v2.contaazul.com/oauth/authorize` (default)
+   - **Access Token URL**: `https://api-v2.contaazul.com/oauth/token` (default)
 5. Click **Save** and authorize the application
+
+> **Note:** The Auth URL differs from the `https://login.contaazul.com/#/oauth/authorize` address shown in the public documentation. n8n cannot build an authorization URL containing `#`, so the node uses the `api-v2` endpoint, which redirects to the same Conta Azul login page.
 
 ## Compatibility
 
