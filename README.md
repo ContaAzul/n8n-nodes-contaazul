@@ -76,8 +76,6 @@ To use this node, you need a Conta Azul account and configure OAuth2 credentials
    - **Access Token URL**: `https://api-v2.contaazul.com/oauth/token` (default)
 5. Click **Save** and authorize the application
 
-> **Note:** The Auth URL differs from the `https://login.contaazul.com/#/oauth/authorize` address shown in the public documentation. n8n cannot build an authorization URL containing `#`, so the node uses the `api-v2` endpoint, which redirects to the same Conta Azul login page.
-
 ## Compatibility
 
 - **Minimum n8n version**: 1.0.0
