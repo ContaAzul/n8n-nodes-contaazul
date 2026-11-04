@@ -57,17 +57,17 @@ describe('ContaAzulOAuth2Api Credentials', () => {
       expect(authUrlProperty).toBeDefined();
       expect(authUrlProperty?.displayName).toBe('Auth URL');
       expect(authUrlProperty?.type).toBe('string');
-      expect(authUrlProperty?.default).toBe('https://auth.contaazul.com/oauth2/authorize');
+      expect(authUrlProperty?.default).toBe('https://api-v2.contaazul.com/oauth/authorize');
     });
 
-    it('should have tokenUrl property with correct default', () => {
-      const tokenUrlProperty = credentials.properties.find(
-        (prop) => prop.name === 'tokenUrl'
+    it('should have accessTokenUrl property with correct default', () => {
+      const accessTokenUrlProperty = credentials.properties.find(
+        (prop) => prop.name === 'accessTokenUrl'
       );
-      expect(tokenUrlProperty).toBeDefined();
-      expect(tokenUrlProperty?.displayName).toBe('Token URL');
-      expect(tokenUrlProperty?.type).toBe('string');
-      expect(tokenUrlProperty?.default).toBe('https://auth.contaazul.com/oauth2/token');
+      expect(accessTokenUrlProperty).toBeDefined();
+      expect(accessTokenUrlProperty?.displayName).toBe('Access Token URL');
+      expect(accessTokenUrlProperty?.type).toBe('string');
+      expect(accessTokenUrlProperty?.default).toBe('https://api-v2.contaazul.com/oauth/token');
     });
   });
 
