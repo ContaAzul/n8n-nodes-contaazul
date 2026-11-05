@@ -35,7 +35,6 @@ jobs:
         run: |
           git config --global user.name "$COMMIT_AUTHOR_NAME"
           git config --global user.email "$COMMIT_AUTHOR_EMAIL"
-          git remote set-url origin https://$GITHUB_ACTOR:$GH_TOKEN@github.com/ContaAzul/creditcard.js
 
       # Setup Node.js build environment
       - name: Setup Node
