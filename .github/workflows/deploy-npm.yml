@@ -5,14 +5,14 @@ on:
     branches:
       - master
 
-permissions:
-  id-token: write # Required for OIDC with npmjs
-  contents: write
-
 jobs:
   publish:
     name: Build and Publish
     runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      id-token: write # Required for OIDC with npmjs
+      contents: write
     if: "!contains(github.event.head_commit.message, 'chore: release v')"
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -25,10 +25,19 @@ jobs:
 
       # Checkout the repo
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: master
           token: ${{ secrets.GH_TOKEN }}
+          persist-credentials: true # release-it pushes the release commit and tag
+
+      # Abort if master moved past the commit approved for this run
+      - name: Check approved revision
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]; then
+            echo "::error::master avançou para $(git rev-parse --short HEAD) durante a aprovação; este run foi aprovado para ${GITHUB_SHA::7}. O run do commit mais novo publica."
+            exit 1
+          fi
 
       # Configure git
       - name: Configure CI Git User
@@ -38,14 +47,14 @@ jobs:
 
       # Setup Node.js build environment
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
 
       # Cache dependencies
       - name: Cache Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache
         with:
           path: |
@@ -69,3 +78,18 @@ jobs:
       # Release and publish version
       - name: Release version
         run: npm run release
+
+      # Fail if the published version has no provenance attestation
+      - name: Verify provenance
+        run: |
+          PKG=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          for i in $(seq 1 20); do
+            if npm view "$PKG@$VERSION" dist.attestations.provenance.predicateType --prefer-online 2>/dev/null | grep -q 'slsa.dev/provenance'; then
+              echo "$PKG@$VERSION publicado com atestação de proveniência"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "::error::$PKG@$VERSION sem atestação de proveniência no registry"
+          exit 1

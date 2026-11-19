@@ -10,10 +10,14 @@ module.exports = {
     release: true,
     releaseName: 'v${version}',
     tokenRef: 'GH_TOKEN',
-	},
-	npm: {
-    skipChecks: true
-  }
+  },
+  npm: {
+    // Publicação por trusted publishing (OIDC) não tem token: o `npm whoami`
+    // dos checks do release-it responde 401 e aborta o release. O release-it
+    // não permite desligar só esse check; a garantia equivalente é o passo
+    // "Verify provenance" do deploy-npm.yml.
+    skipChecks: true,
+  },
   // plugins: {
   //   './.github/workflows/scripts/conventional-changelog.js': {},
   // },
